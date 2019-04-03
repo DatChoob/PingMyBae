@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_number": "797112050667",
+    "firebase_url": "https://pingmyfriends.firebaseio.com",
+    "project_id": "pingmyfriends",
+    "storage_bucket": "pingmyfriends.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797112050667:android:548130f71180ac7c",
+        "android_client_info": {
+          "package_name": "com.josh.pingfriends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "797112050667-dpj21qi9or7b2fd7tbidiq6ou4qa9pmn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.josh.pingfriends",
+            "certificate_hash": "e34ad03cb484d73c10bf64c12bf7cf8c3ebe1fc4"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiCelxcew7g-4DYe55xPsG0UxS09soAh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "797112050667-17da5rpjgbod59fprl77lm2riatdkd66.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "797112050667-sqrh592ldhohraiuk8nnmm77begoin8t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.josh.pingfriends"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
