@@ -41,6 +41,11 @@ class AuthService {
     try {
       GoogleSignInAccount googleUser = await _googleSignIn.signIn();
 
+      // Happens whne use cancels google signin
+      if (googleUser == null) {
+        return null;
+      }
+
       // Step 2
       GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -49,7 +54,6 @@ class AuthService {
       );
 
       final FirebaseUser user = await _auth.signInWithCredential(credential);
-      print("signed in " + user.displayName);
 
       // Step 3
       updateUserData(user);
