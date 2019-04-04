@@ -36,12 +36,10 @@ class _HomePageState extends State<HomePage> {
       stream: FirestoreUtil().getUsers(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
-          print(snapshot.data.documents.length);
           return ListView(
             itemExtent: 100,
             children: snapshot.data.documents.map((document) {
               FirestoreUser user = FirestoreUser.fromFirestore(document.data);
-              print("hero.${user.uid}");
               return ListTile(
                 leading: Hero(
                   tag: "hero.${user.uid}",

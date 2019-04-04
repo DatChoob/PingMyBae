@@ -19,11 +19,14 @@ class _PersonPageState extends State<PersonPage> {
       ),
       body: Column(children: [
         Center(
-          child: Hero(
-            tag: "hero.${widget.person.uid}",
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(widget.person.photoURL),
+          child: Container(
+            margin: const EdgeInsets.only(top: 20.0),
+            child: Hero(
+              tag: "hero.${widget.person.uid}",
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(widget.person.photoURL),
+              ),
             ),
           ),
         ),
