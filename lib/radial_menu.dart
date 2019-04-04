@@ -2,11 +2,11 @@ import 'package:fcm_push/fcm_push.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ping_friends/models/moods.dart';
 import 'package:ping_friends/util/authentication.dart';
 import 'package:ping_friends/util/firestore_util.dart';
 import 'package:vector_math/vector_math.dart' show radians;
 import 'dart:math';
-
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
 final String serverKey =
@@ -48,13 +48,13 @@ class RadialAnimation extends StatelessWidget {
       begin: 1.5,
       end: 0.0,
     ).animate(
-      CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn),
+      CurvedAnimation(parent: controller, curve: Curves.elasticInOut),
     );
     translation = Tween<double>(
       begin: 0.0,
       end: 100.0,
     ).animate(
-      CurvedAnimation(parent: controller, curve: Curves.linear),
+      CurvedAnimation(parent: controller, curve: Curves.easeInOutQuint),
     );
   }
 
@@ -124,7 +124,7 @@ class RadialAnimation extends StatelessWidget {
       transform: Matrix4.translation(Vector3(
           (translation.value) * cos(rad), (translation.value) * sin(rad), 0)),
       child: Container(
-        constraints: BoxConstraints.tight(Size.square(500)),
+        // constraints: BoxConstraints.tight(Size.square(500)),
         alignment: Alignment.center,
         // decoration:
         //     BoxDecoration(border: Border.all(color: Colors.blueAccent)),
@@ -160,39 +160,10 @@ class RadialAnimation extends StatelessWidget {
     fcmMessage.data.add(Tuple2("type", mood.type));
     fcmMessage.data.add(Tuple2("fromUser", currentUser.uid));
 
-    // await fcm.send(fcmMessage);
+    await fcm.send(fcmMessage);
 
     // tell firebase that we send a notification
     FirestoreUtil().sentNotification(currentUser, person, mood);
     //
   }
-}
-
-class Moods {
-  final String _message;
-  final String _tooltip;
-  final String _type;
-
-  const Moods._internal(this._message, this._tooltip, this._type);
-  get message => _message;
-  get tooltip => _tooltip;
-  get type => _type;
-
-  static const ALONE_TIME =
-      const Moods._internal('wants privacy', 'Wants to be alone', "alone_time");
-  static const ATTENTION =
-      const Moods._internal('wants attention', 'Attention', 'attention');
-  static const TIRED = const Moods._internal('is tired', 'Tired', 'tired');
-  static const SURPRISED =
-      const Moods._internal('is surprised', 'Surprised', 'surprised');
-  static const HAPPY = const Moods._internal('is happy', 'Happy', 'happy');
-  static const SAD = const Moods._internal('is sad', 'Sad', 'sad');
-  static const HANGRY = const Moods._internal('is hangry', 'Hangry', 'hangry');
-  static const ANGRY = const Moods._internal('is angry', 'Angry', 'angry');
-}
-
-class Fruits {
-  final _value;
-  const Fruits._internal(this._value);
-  toString() => 'Enum.$_value';
 }

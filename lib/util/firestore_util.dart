@@ -2,13 +2,23 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ping_friends/radial_menu.dart';
+import 'package:ping_friends/models/moods.dart';
 
 class FirestoreUtil {
   final Firestore _db = Firestore.instance;
 
   Stream<QuerySnapshot> getUsers() {
     return _db.collection('users').snapshots();
+  }
+
+  Stream<DocumentSnapshot> getStats(String meUID, String personUID) {
+    print(meUID);
+    return _db
+        .collection('users')
+        .document(meUID)
+        .collection('sentMoods')
+        .document(personUID)
+        .snapshots();
   }
 
   sentNotification(FirebaseUser me, FirestoreUser person, Moods moodSent) {
@@ -21,10 +31,12 @@ class FirestoreUtil {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
       String moodKey = '${moodSent.type}Count';
       if (postSnapshot.exists) {
-        tx.update(postRef,
+        await tx.update(postRef,
             <String, dynamic>{moodKey: (postSnapshot.data[moodKey] ?? 0) + 1});
+        print("updating mood in firebase");
       } else {
-        tx.set(postRef, <String, dynamic>{moodKey: 1});
+        await tx.set(postRef, <String, dynamic>{moodKey: 1});
+        print("creating mood in firebase");
       }
     });
   }
