@@ -2,12 +2,31 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ping_friends/radial_menu.dart';
 
 class FirestoreUtil {
   final Firestore _db = Firestore.instance;
 
   Stream<QuerySnapshot> getUsers() {
     return _db.collection('users').snapshots();
+  }
+
+  sentNotification(FirebaseUser me, FirestoreUser person, Moods moodSent) {
+    final DocumentReference postRef = _db
+        .collection('users')
+        .document(me.uid)
+        .collection('sentMoods')
+        .document(person.uid);
+    Firestore.instance.runTransaction((Transaction tx) async {
+      DocumentSnapshot postSnapshot = await tx.get(postRef);
+      String moodKey = '${moodSent.type}Count';
+      if (postSnapshot.exists) {
+        tx.update(postRef,
+            <String, dynamic>{moodKey: (postSnapshot.data[moodKey] ?? 0) + 1});
+      } else {
+        tx.set(postRef, <String, dynamic>{moodKey: 1});
+      }
+    });
   }
 }
 

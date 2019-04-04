@@ -7,6 +7,8 @@ import 'package:ping_friends/util/firestore_util.dart';
 import 'package:vector_math/vector_math.dart' show radians;
 import 'dart:math';
 
+import 'package:vector_math/vector_math_64.dart' show Vector3;
+
 final String serverKey =
     "AAAAuZeUo-s:APA91bHtlAXklqXnuCnPlcu_F01KJa38jtytOHODZuBlf56Z7B6upzbrYZaGx_hBJeKxMgsNuWfa3-X7GGyeUkMpLn6Yyy-729Y43R_hTI0FCjI5ahhenOn9vCbadUSQOdIMl0ek17my";
 
@@ -66,43 +68,35 @@ class RadialAnimation extends StatelessWidget {
               _buildButton(0,
                   color: Colors.red,
                   icon: FontAwesomeIcons.angry,
-                  message: "is being sassy",
-                  tooltip: "Angry"),
+                  mood: Moods.ANGRY),
               _buildButton(45,
                   color: Colors.teal,
                   icon: FontAwesomeIcons.smileBeam,
-                  message: "is happy",
-                  tooltip: "Happy"),
+                  mood: Moods.HAPPY),
               _buildButton(90,
                   color: Colors.pinkAccent,
                   icon: FontAwesomeIcons.sadTear,
-                  message: "is sad",
-                  tooltip: "Sad"),
+                  mood: Moods.SAD),
               _buildButton(135,
                   color: Colors.blue,
                   icon: FontAwesomeIcons.pizzaSlice,
-                  message: "is hangry",
-                  tooltip: "Hangry"),
+                  mood: Moods.HANGRY),
               _buildButton(180,
                   color: Colors.deepOrange,
                   icon: FontAwesomeIcons.surprise,
-                  message: "is surprised",
-                  tooltip: "Surprised"),
+                  mood: Moods.SURPRISED),
               _buildButton(225,
                   color: Colors.indigo,
                   icon: FontAwesomeIcons.tired,
-                  message: "is tired",
-                  tooltip: "Tired"),
+                  mood: Moods.TIRED),
               _buildButton(270,
                   color: Colors.black,
                   icon: FontAwesomeIcons.userSecret,
-                  message: "wants privacy",
-                  tooltip: "Want to be alone"),
+                  mood: Moods.ALONE_TIME),
               _buildButton(315,
                   color: Colors.amber,
                   icon: FontAwesomeIcons.child,
-                  message: "needs attention",
-                  tooltip: "Attention"),
+                  mood: Moods.ATTENTION),
               Transform.scale(
                 // subtract the beginning value to run the opposite animation
                 scale: scale.value - 1.5,
@@ -124,26 +118,23 @@ class RadialAnimation extends StatelessWidget {
         });
   }
 
-  _buildButton(double angle,
-      {Color color, IconData icon, String message, String tooltip}) {
+  _buildButton(double angle, {Color color, IconData icon, Moods mood}) {
     final double rad = radians(angle);
-
     return Transform(
-      transform: Matrix4.identity()
-        ..translate(
-            (translation.value) * cos(rad), (translation.value) * sin(rad)),
+      transform: Matrix4.translation(Vector3(
+          (translation.value) * cos(rad), (translation.value) * sin(rad), 0)),
       child: Container(
         constraints: BoxConstraints.tight(Size.square(500)),
         alignment: Alignment.center,
         // decoration:
         //     BoxDecoration(border: Border.all(color: Colors.blueAccent)),
         child: Tooltip(
-          message: tooltip,
+          message: mood.tooltip,
           child: FloatingActionButton(
               heroTag: "icon.${icon.hashCode}",
               child: Icon(icon),
               backgroundColor: color,
-              onPressed: () => sendNotification(message),
+              onPressed: () => sendNotification(mood),
               elevation: 0),
         ),
       ),
@@ -158,15 +149,50 @@ class RadialAnimation extends StatelessWidget {
     controller.reverse();
   }
 
-  void sendNotification(String message) async {
+  void sendNotification(Moods mood) async {
     final FCM fcm = FCM(serverKey);
     FirebaseUser currentUser = await authService.user.first.then((a) => a);
     final Message fcmMessage = Message()
       ..to = person.fcmToken
       ..title = currentUser.displayName
-      ..body = "${currentUser.displayName} $message";
+      ..body = "${currentUser.displayName} ${mood.message}";
 
-    fcmMessage.data.add(Tuple2("type", "standard"));
-    fcm.send(fcmMessage);
+    fcmMessage.data.add(Tuple2("type", mood.type));
+    fcmMessage.data.add(Tuple2("fromUser", currentUser.uid));
+
+    // await fcm.send(fcmMessage);
+
+    // tell firebase that we send a notification
+    FirestoreUtil().sentNotification(currentUser, person, mood);
+    //
   }
+}
+
+class Moods {
+  final String _message;
+  final String _tooltip;
+  final String _type;
+
+  const Moods._internal(this._message, this._tooltip, this._type);
+  get message => _message;
+  get tooltip => _tooltip;
+  get type => _type;
+
+  static const ALONE_TIME =
+      const Moods._internal('wants privacy', 'Wants to be alone', "alone_time");
+  static const ATTENTION =
+      const Moods._internal('wants attention', 'Attention', 'attention');
+  static const TIRED = const Moods._internal('is tired', 'Tired', 'tired');
+  static const SURPRISED =
+      const Moods._internal('is surprised', 'Surprised', 'surprised');
+  static const HAPPY = const Moods._internal('is happy', 'Happy', 'happy');
+  static const SAD = const Moods._internal('is sad', 'Sad', 'sad');
+  static const HANGRY = const Moods._internal('is hangry', 'Hangry', 'hangry');
+  static const ANGRY = const Moods._internal('is angry', 'Angry', 'angry');
+}
+
+class Fruits {
+  final _value;
+  const Fruits._internal(this._value);
+  toString() => 'Enum.$_value';
 }
