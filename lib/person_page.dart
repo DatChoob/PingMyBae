@@ -71,17 +71,20 @@ class _PersonPageState extends State<PersonPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Column(children: <Widget>[
+            Text("Happy"),
             IconButton(icon: Icon(FontAwesomeIcons.smileBeam), onPressed: null),
             Text('${stats.happy}')
           ]),
           Column(
             children: <Widget>[
+              Text("Attention"),
               IconButton(icon: Icon(FontAwesomeIcons.child), onPressed: null),
               Text('${stats.attention}')
             ],
           ),
           Column(
             children: <Widget>[
+              Text("Surprised"),
               IconButton(
                   icon: Icon(FontAwesomeIcons.surprise), onPressed: null),
               Text('${stats.surprised}')
@@ -89,6 +92,7 @@ class _PersonPageState extends State<PersonPage> {
           ),
           Column(
             children: <Widget>[
+              Text("Hangry"),
               IconButton(
                   icon: Icon(FontAwesomeIcons.pizzaSlice), onPressed: null),
               Text('${stats.hangry}')
@@ -96,30 +100,35 @@ class _PersonPageState extends State<PersonPage> {
           )
         ],
       ),
+      SizedBox(width: 10, height: 20),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Column(children: <Widget>[
+            Text("Sad"),
             IconButton(icon: Icon(FontAwesomeIcons.sadTear), onPressed: null),
-            Text('${stats.sad}')
+            Text('${stats.sad}'),
           ]),
           Column(
             children: <Widget>[
+              Text("Angry"),
               IconButton(icon: Icon(FontAwesomeIcons.angry), onPressed: null),
-              Text('${stats.angry}')
+              Text('${stats.angry}'),
             ],
           ),
           Column(
             children: <Widget>[
+              Text("Alone Time"),
               IconButton(
                   icon: Icon(FontAwesomeIcons.userSecret), onPressed: null),
-              Text('${stats.alone}')
+              Text('${stats.alone}'),
             ],
           ),
           Column(
             children: <Widget>[
+              Text("Tired"),
               IconButton(icon: Icon(FontAwesomeIcons.tired), onPressed: null),
-              Text('${stats.tired}')
+              Text('${stats.tired}'),
             ],
           )
         ],

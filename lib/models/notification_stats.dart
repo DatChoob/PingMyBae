@@ -22,14 +22,14 @@ class NotificationStats {
   static NotificationStats fromFirebase(Map<String, dynamic> data) {
     if (data == null) return empty();
     return NotificationStats(
-        alone: data['${Moods.ALONE_TIME.type}Count'] ?? 0,
-        surprised: data['${Moods.SURPRISED.type}Count'] ?? 0,
-        attention: data['${Moods.ATTENTION.type}Count'] ?? 0,
-        hangry: data['${Moods.HANGRY.type}Count'] ?? 0,
-        tired: data['${Moods.TIRED.type}Count'] ?? 0,
-        sad: data['${Moods.SAD.type}Count'] ?? 0,
-        happy: data['${Moods.HAPPY.type}Count'] ?? 0,
-        angry: data['${Moods.ANGRY.type}Count'] ?? 0);
+        alone: data['${Moods.ALONE_TIME.type}'] ?? 0,
+        surprised: data['${Moods.SURPRISED.type}'] ?? 0,
+        attention: data['${Moods.ATTENTION.type}'] ?? 0,
+        hangry: data['${Moods.HANGRY.type}'] ?? 0,
+        tired: data['${Moods.TIRED.type}'] ?? 0,
+        sad: data['${Moods.SAD.type}'] ?? 0,
+        happy: data['${Moods.HAPPY.type}'] ?? 0,
+        angry: data['${Moods.ANGRY.type}'] ?? 0);
   }
 
   static NotificationStats empty() {

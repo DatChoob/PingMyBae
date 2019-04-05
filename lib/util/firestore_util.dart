@@ -29,7 +29,7 @@ class FirestoreUtil {
         .document(person.uid);
     Firestore.instance.runTransaction((Transaction tx) async {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
-      String moodKey = '${moodSent.type}Count';
+      String moodKey = '${moodSent.type}';
       if (postSnapshot.exists) {
         await tx.update(postRef,
             <String, dynamic>{moodKey: (postSnapshot.data[moodKey] ?? 0) + 1});
