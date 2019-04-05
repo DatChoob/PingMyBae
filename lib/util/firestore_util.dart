@@ -31,11 +31,14 @@ class FirestoreUtil {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
       String moodKey = '${moodSent.type}';
       if (postSnapshot.exists) {
-        await tx.update(postRef,
-            <String, dynamic>{moodKey: (postSnapshot.data[moodKey] ?? 0) + 1});
+        await tx.update(postRef, <String, dynamic>{
+          moodKey: (postSnapshot.data[moodKey] ?? 0) + 1,
+          'currentMood': moodKey
+        });
         print("updating mood in firebase");
       } else {
-        await tx.set(postRef, <String, dynamic>{moodKey: 1});
+        await tx.set(
+            postRef, <String, dynamic>{moodKey: 1, 'currentMood': moodKey});
         print("creating mood in firebase");
       }
     });

@@ -9,6 +9,7 @@ class NotificationStats {
   int hangry;
   int attention;
   int tired;
+  Moods currentMood;
   NotificationStats(
       {this.alone,
       this.surprised,
@@ -17,7 +18,8 @@ class NotificationStats {
       this.angry,
       this.attention,
       this.hangry,
-      this.tired});
+      this.tired,
+      this.currentMood});
 
   static NotificationStats fromFirebase(Map<String, dynamic> data) {
     if (data == null) return empty();
@@ -29,7 +31,8 @@ class NotificationStats {
         tired: data['${Moods.TIRED.type}'] ?? 0,
         sad: data['${Moods.SAD.type}'] ?? 0,
         happy: data['${Moods.HAPPY.type}'] ?? 0,
-        angry: data['${Moods.ANGRY.type}'] ?? 0);
+        angry: data['${Moods.ANGRY.type}'] ?? 0,
+        currentMood: Moods.fromString(data['currentMood']));
   }
 
   static NotificationStats empty() {
@@ -41,6 +44,7 @@ class NotificationStats {
         tired: 0,
         sad: 0,
         happy: 0,
-        angry: 0);
+        angry: 0,
+        currentMood: null);
   }
 }

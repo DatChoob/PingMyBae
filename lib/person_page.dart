@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ping_friends/models/moods.dart';
 import 'package:ping_friends/models/notification_stats.dart';
 import 'package:ping_friends/radial_menu.dart';
 import 'package:ping_friends/util/authentication.dart';
@@ -65,88 +66,104 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   Widget _showStats(NotificationStats stats) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: <
+        Widget>[
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          Column(children: <Widget>[
+            Text("Happy"),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                child: Icon(FontAwesomeIcons.smileBeam,
+                    color: _highlightCurrentMood(stats, Moods.HAPPY))),
+            Text('${stats.happy}')
+          ]),
+          Column(
             children: <Widget>[
-              Column(children: <Widget>[
-                Text("Happy"),
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
-                    child: Icon(FontAwesomeIcons.smileBeam)),
-                Text('${stats.happy}')
-              ]),
-              Column(
-                children: <Widget>[
-                  Text("Attention"),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
-                      child: Icon(FontAwesomeIcons.child)),
-                  Text('${stats.attention}')
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text("Surprised"),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
-                      child: Icon(FontAwesomeIcons.surprise)),
-                  Text('${stats.surprised}')
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text("Hangry"),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
-                      child: Icon(FontAwesomeIcons.pizzaSlice)),
-                  Text('${stats.hangry}')
-                ],
-              )
+              Text("Attention"),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                  child: Icon(FontAwesomeIcons.child,
+                      color: _highlightCurrentMood(stats, Moods.ATTENTION))),
+              Text('${stats.attention}')
             ],
           ),
-          SizedBox(width: 10, height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          Column(
             children: <Widget>[
-              Column(children: <Widget>[
-                Text("Sad"),
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
-                    child: Icon(FontAwesomeIcons.sadTear)),
-                Text('${stats.sad}'),
-              ]),
-              Column(
-                children: <Widget>[
-                  Text("Angry"),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
-                      child: Icon(FontAwesomeIcons.angry)),
-                  Text('${stats.angry}'),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text("Alone Time"),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
-                      child: Icon(FontAwesomeIcons.userSecret)),
-                  Text('${stats.alone}'),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text("Tired"),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
-                      child: Icon(FontAwesomeIcons.tired)),
-                  Text('${stats.tired}'),
-                ],
-              )
+              Text("Surprised"),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                  child: Icon(FontAwesomeIcons.surprise,
+                      color: _highlightCurrentMood(stats, Moods.SURPRISED))),
+              Text('${stats.surprised}')
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              Text("Hangry"),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                  child: Icon(FontAwesomeIcons.pizzaSlice,
+                      color: _highlightCurrentMood(stats, Moods.HANGRY))),
+              Text('${stats.hangry}')
             ],
           )
-        ]);
+        ],
+      ),
+      SizedBox(width: 10, height: 20),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Column(children: <Widget>[
+            Text("Sad"),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                child: Icon(FontAwesomeIcons.sadTear,
+                    color: _highlightCurrentMood(stats, Moods.SAD))),
+            Text('${stats.sad}'),
+          ]),
+          Column(
+            children: <Widget>[
+              Text("Angry"),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                  child: Icon(FontAwesomeIcons.angry,
+                      color: _highlightCurrentMood(stats, Moods.ANGRY))),
+              Text('${stats.angry}'),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              Text("Alone Time"),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                  child: Icon(FontAwesomeIcons.userSecret,
+                      color: _highlightCurrentMood(stats, Moods.ALONE_TIME))),
+              Text('${stats.alone}'),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              Text("Tired"),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                  child: Icon(
+                    FontAwesomeIcons.tired,
+                    color: _highlightCurrentMood(stats, Moods.TIRED),
+                  )),
+              Text('${stats.tired}'),
+            ],
+          )
+        ],
+      )
+    ]);
+  }
+
+  _highlightCurrentMood(NotificationStats stats, Moods moodToCheck) {
+    if (moodToCheck == null) return null;
+    if (stats.currentMood?.type == moodToCheck.type) {
+      return Colors.pink;
+    }
   }
 }
