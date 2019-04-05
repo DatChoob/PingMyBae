@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           return ListView(
-            itemExtent: 100,
+            itemExtent: 60,
             children: snapshot.data.documents.map((document) {
               FirestoreUser user = FirestoreUser.fromFirestore(document.data);
               return ListTile(
@@ -45,7 +45,10 @@ class _HomePageState extends State<HomePage> {
                   tag: "hero.${user.uid}",
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
-                    child: Image.network(user.photoURL),
+                    child: Image.network(
+                      user.photoURL,
+                      width: 55,
+                    ),
                   ),
                 ),
                 title: Text(
@@ -57,12 +60,12 @@ class _HomePageState extends State<HomePage> {
                     return PersonPage(person: user);
                   }));
                 },
+                trailing: Icon(Icons.keyboard_arrow_right),
               );
             }).toList(),
           );
-        }
-
-        return Center(child: CircularProgressIndicator());
+        } else
+          return Center(child: CircularProgressIndicator());
       },
     );
   }
