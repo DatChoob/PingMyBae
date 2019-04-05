@@ -65,74 +65,88 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   Widget _showStats(NotificationStats stats) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: <
-        Widget>[
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Column(children: <Widget>[
-            Text("Happy"),
-            IconButton(icon: Icon(FontAwesomeIcons.smileBeam), onPressed: null),
-            Text('${stats.happy}')
-          ]),
-          Column(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Text("Attention"),
-              IconButton(icon: Icon(FontAwesomeIcons.child), onPressed: null),
-              Text('${stats.attention}')
+              Column(children: <Widget>[
+                Text("Happy"),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                    child: Icon(FontAwesomeIcons.smileBeam)),
+                Text('${stats.happy}')
+              ]),
+              Column(
+                children: <Widget>[
+                  Text("Attention"),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                      child: Icon(FontAwesomeIcons.child)),
+                  Text('${stats.attention}')
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Text("Surprised"),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                      child: Icon(FontAwesomeIcons.surprise)),
+                  Text('${stats.surprised}')
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Text("Hangry"),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                      child: Icon(FontAwesomeIcons.pizzaSlice)),
+                  Text('${stats.hangry}')
+                ],
+              )
             ],
           ),
-          Column(
+          SizedBox(width: 10, height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Text("Surprised"),
-              IconButton(
-                  icon: Icon(FontAwesomeIcons.surprise), onPressed: null),
-              Text('${stats.surprised}')
-            ],
-          ),
-          Column(
-            children: <Widget>[
-              Text("Hangry"),
-              IconButton(
-                  icon: Icon(FontAwesomeIcons.pizzaSlice), onPressed: null),
-              Text('${stats.hangry}')
+              Column(children: <Widget>[
+                Text("Sad"),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                    child: Icon(FontAwesomeIcons.sadTear)),
+                Text('${stats.sad}'),
+              ]),
+              Column(
+                children: <Widget>[
+                  Text("Angry"),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                      child: Icon(FontAwesomeIcons.angry)),
+                  Text('${stats.angry}'),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Text("Alone Time"),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                      child: Icon(FontAwesomeIcons.userSecret)),
+                  Text('${stats.alone}'),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Text("Tired"),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
+                      child: Icon(FontAwesomeIcons.tired)),
+                  Text('${stats.tired}'),
+                ],
+              )
             ],
           )
-        ],
-      ),
-      SizedBox(width: 10, height: 20),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Column(children: <Widget>[
-            Text("Sad"),
-            IconButton(icon: Icon(FontAwesomeIcons.sadTear), onPressed: null),
-            Text('${stats.sad}'),
-          ]),
-          Column(
-            children: <Widget>[
-              Text("Angry"),
-              IconButton(icon: Icon(FontAwesomeIcons.angry), onPressed: null),
-              Text('${stats.angry}'),
-            ],
-          ),
-          Column(
-            children: <Widget>[
-              Text("Alone Time"),
-              IconButton(
-                  icon: Icon(FontAwesomeIcons.userSecret), onPressed: null),
-              Text('${stats.alone}'),
-            ],
-          ),
-          Column(
-            children: <Widget>[
-              Text("Tired"),
-              IconButton(icon: Icon(FontAwesomeIcons.tired), onPressed: null),
-              Text('${stats.tired}'),
-            ],
-          )
-        ],
-      )
-    ]);
+        ]);
   }
 }
