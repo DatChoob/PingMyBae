@@ -1,4 +1,4 @@
-import 'package:ping_friends/models/moods.dart';
+import 'package:ping_friends/models/mood.dart';
 
 class NotificationStats {
   int alone;
@@ -9,7 +9,7 @@ class NotificationStats {
   int hangry;
   int attention;
   int tired;
-  Moods currentMood;
+  Mood currentMood;
   NotificationStats(
       {this.alone,
       this.surprised,
@@ -24,15 +24,15 @@ class NotificationStats {
   static NotificationStats fromFirebase(Map<String, dynamic> data) {
     if (data == null) return empty();
     return NotificationStats(
-        alone: data['${Moods.ALONE_TIME.type}'] ?? 0,
-        surprised: data['${Moods.SURPRISED.type}'] ?? 0,
-        attention: data['${Moods.ATTENTION.type}'] ?? 0,
-        hangry: data['${Moods.HANGRY.type}'] ?? 0,
-        tired: data['${Moods.TIRED.type}'] ?? 0,
-        sad: data['${Moods.SAD.type}'] ?? 0,
-        happy: data['${Moods.HAPPY.type}'] ?? 0,
-        angry: data['${Moods.ANGRY.type}'] ?? 0,
-        currentMood: Moods.fromString(data['currentMood']));
+        alone: data['${Mood.ALONE_TIME.type}'] ?? 0,
+        surprised: data['${Mood.SURPRISED.type}'] ?? 0,
+        attention: data['${Mood.ATTENTION.type}'] ?? 0,
+        hangry: data['${Mood.HANGRY.type}'] ?? 0,
+        tired: data['${Mood.TIRED.type}'] ?? 0,
+        sad: data['${Mood.SAD.type}'] ?? 0,
+        happy: data['${Mood.HAPPY.type}'] ?? 0,
+        angry: data['${Mood.ANGRY.type}'] ?? 0,
+        currentMood: Mood.fromString(data['currentMood']));
   }
 
   static NotificationStats empty() {

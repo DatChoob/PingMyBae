@@ -2,7 +2,7 @@ import 'package:fcm_push/fcm_push.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ping_friends/models/moods.dart';
+import 'package:ping_friends/models/mood.dart';
 import 'package:ping_friends/util/authentication.dart';
 import 'package:ping_friends/util/firestore_util.dart';
 import 'package:vector_math/vector_math.dart' show radians;
@@ -68,35 +68,35 @@ class RadialAnimation extends StatelessWidget {
               _buildButton(0,
                   color: Colors.red,
                   icon: FontAwesomeIcons.angry,
-                  mood: Moods.ANGRY),
+                  mood: Mood.ANGRY),
               _buildButton(45,
                   color: Colors.teal,
                   icon: FontAwesomeIcons.smileBeam,
-                  mood: Moods.HAPPY),
+                  mood: Mood.HAPPY),
               _buildButton(90,
                   color: Colors.pinkAccent,
                   icon: FontAwesomeIcons.sadTear,
-                  mood: Moods.SAD),
+                  mood: Mood.SAD),
               _buildButton(135,
                   color: Colors.blue,
                   icon: FontAwesomeIcons.pizzaSlice,
-                  mood: Moods.HANGRY),
+                  mood: Mood.HANGRY),
               _buildButton(180,
                   color: Colors.deepOrange,
                   icon: FontAwesomeIcons.surprise,
-                  mood: Moods.SURPRISED),
+                  mood: Mood.SURPRISED),
               _buildButton(225,
                   color: Colors.indigo,
                   icon: FontAwesomeIcons.tired,
-                  mood: Moods.TIRED),
+                  mood: Mood.TIRED),
               _buildButton(270,
                   color: Colors.black,
                   icon: FontAwesomeIcons.userSecret,
-                  mood: Moods.ALONE_TIME),
+                  mood: Mood.ALONE_TIME),
               _buildButton(315,
                   color: Colors.amber,
                   icon: FontAwesomeIcons.child,
-                  mood: Moods.ATTENTION),
+                  mood: Mood.ATTENTION),
               Transform.scale(
                 // subtract the beginning value to run the opposite animation
                 scale: scale.value - 1.5,
@@ -118,7 +118,7 @@ class RadialAnimation extends StatelessWidget {
         });
   }
 
-  _buildButton(double angle, {Color color, IconData icon, Moods mood}) {
+  _buildButton(double angle, {Color color, IconData icon, Mood mood}) {
     final double rad = radians(angle);
     return Transform(
       transform: Matrix4.translation(Vector3(
@@ -149,7 +149,7 @@ class RadialAnimation extends StatelessWidget {
     controller.reverse();
   }
 
-  void sendNotification(Moods mood) async {
+  void sendNotification(Mood mood) async {
     final FCM fcm = FCM(serverKey);
     FirebaseUser currentUser = await authService.user.first.then((a) => a);
     final Message fcmMessage = Message()

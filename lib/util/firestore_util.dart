@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ping_friends/models/moods.dart';
+import 'package:ping_friends/models/mood.dart';
 
 class FirestoreUtil {
   final Firestore _db = Firestore.instance;
@@ -12,7 +12,6 @@ class FirestoreUtil {
   }
 
   Stream<DocumentSnapshot> getStats(String meUID, String personUID) {
-    print(meUID);
     return _db
         .collection('users')
         .document(meUID)
@@ -21,7 +20,7 @@ class FirestoreUtil {
         .snapshots();
   }
 
-  sentNotification(FirebaseUser me, FirestoreUser person, Moods moodSent) {
+  sentNotification(FirebaseUser me, FirestoreUser person, Mood moodSent) {
     final DocumentReference postRef = _db
         .collection('users')
         .document(me.uid)
