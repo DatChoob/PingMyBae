@@ -7,9 +7,7 @@ import 'package:ping_friends/util/authentication.dart';
 
 class HomePage extends StatefulWidget {
   final FirestoreUser currentUser;
-
   HomePage({Key key, this.currentUser}) : super(key: key);
-
   _HomePageState createState() => _HomePageState();
 }
 
@@ -18,54 +16,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Ping My Friends Home Page')),
-      drawer: Drawer(
-          child: ListView(padding: EdgeInsets.zero, children: <Widget>[
-        DrawerHeader(
-            child: Row(children: <Widget>[
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: (widget.currentUser != null)
-                      ? Image.network(widget.currentUser.photoURL, width: 55)
-                      : Container(
-                          width: 70.0,
-                          height: 70.0,
-                          child: CircleAvatar(
-                              backgroundColor: Colors.red,
-                              child: Text('A'.toUpperCase(),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w100,
-                                      fontSize: 50))))),
-              Text(widget.currentUser.displayName)
-            ]),
-            decoration: BoxDecoration(color: Colors.blue)),
-        ListTile(
-            title: Text('Add Friends'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          AddFriendsRoute(currentUser: widget.currentUser)));
-            }),
-        ListTile(
-            title: Text('Pending Friends Requests'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          FriendRequestRoute(currentUser: widget.currentUser)));
-            }),
-        ListTile(
-            title: Text('Log out'),
-            onTap: () {
-              Navigator.pop(context);
-              authService.signOut();
-            })
-      ])),
+      drawer: new LoggedInDrawer(
+        currentUser: widget.currentUser,
+      ),
       body: _getUsers(),
     );
   }
@@ -107,5 +60,62 @@ class _HomePageState extends State<HomePage> {
             });
       }).toList());
     }
+  }
+}
+
+class LoggedInDrawer extends StatelessWidget {
+  final FirestoreUser currentUser;
+  LoggedInDrawer({Key key, this.currentUser}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+        child: ListView(padding: EdgeInsets.zero, children: <Widget>[
+      DrawerHeader(
+          child: Row(children: <Widget>[
+            ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: (currentUser != null)
+                    ? Image.network(currentUser.photoURL, width: 55)
+                    : Container(
+                        width: 70.0,
+                        height: 70.0,
+                        child: CircleAvatar(
+                            backgroundColor: Colors.red,
+                            child: Text('A'.toUpperCase(),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w100,
+                                    fontSize: 50))))),
+            Text(currentUser.displayName)
+          ]),
+          decoration: BoxDecoration(color: Colors.blue)),
+      ListTile(
+          title: Text('Add Friends'),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        AddFriendsRoute(currentUser: currentUser)));
+          }),
+      ListTile(
+          title: Text('Pending Friends Requests'),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        FriendRequestRoute(currentUser: currentUser)));
+          }),
+      ListTile(
+          title: Text('Log out'),
+          onTap: () {
+            Navigator.pop(context);
+            authService.signOut();
+          })
+    ]));
   }
 }
