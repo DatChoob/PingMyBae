@@ -23,12 +23,8 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                GoogleSignInButton(onPressed: signIn),
+                GoogleSignInButton(onPressed: authService.googleSignIn),
               ],
             )));
-  }
-
-  signIn() {
-    authService.googleSignIn();
   }
 }
