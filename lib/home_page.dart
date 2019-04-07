@@ -69,6 +69,7 @@ class LoggedInDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int numFriendRequests = currentUser.getFriendRequests().length;
     return Drawer(
         child: ListView(padding: EdgeInsets.zero, children: <Widget>[
       DrawerHeader(
@@ -101,7 +102,19 @@ class LoggedInDrawer extends StatelessWidget {
                         AddFriendsRoute(currentUser: currentUser)));
           }),
       ListTile(
-          title: Text('Pending Friends Requests'),
+          title: Row(children: [
+            Text('Pending Friends Requests'),
+            numFriendRequests > 0
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                    child: Chip(
+                        label: Text('${numFriendRequests}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                        backgroundColor: Colors.red))
+                : Container(width: 0, height: 0)
+          ]),
           onTap: () {
             Navigator.pop(context);
             Navigator.push(
