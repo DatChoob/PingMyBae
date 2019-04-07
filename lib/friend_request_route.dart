@@ -133,6 +133,8 @@ class _PersonCardListState extends State<PersonCardList> {
   }
 
   void _removeFriendFromList(int index) {
-    setState(() => widget.futurePersons.removeAt(index));
+    setState(() {
+      widget.futurePersons.removeAt(index);
+    });
   }
 }

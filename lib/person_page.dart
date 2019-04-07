@@ -32,6 +32,14 @@ class _PersonPageState extends State<PersonPage> {
             ),
           ),
         ),
+        Container(
+          height: 30,
+          child: RaisedButton(
+            color: Colors.redAccent,
+            child: Text("Stop being friends"),
+            onPressed: _showDialogStopBeingFriends,
+          ),
+        ),
         StreamBuilder(
             stream: firestoreUtil.getStats(
                 widget.currentUser.uid, widget.person.uid),
@@ -45,5 +53,31 @@ class _PersonPageState extends State<PersonPage> {
         Expanded(child: Center(child: RadialMenu(person: widget.person)))
       ]),
     );
+  }
+
+  void _showDialogStopBeingFriends() async {
+    bool removeFriend = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Removing friend"),
+          content:
+              Text("Stop being friends with ${widget.person.displayName}?"),
+          actions: <Widget>[
+            FlatButton(
+                child: Text("Yes"),
+                onPressed: () => Navigator.of(context).pop(true)),
+            FlatButton(
+              child: Text("No"),
+              onPressed: () => Navigator.of(context).pop(false),
+            )
+          ],
+        );
+      },
+    );
+    if (removeFriend == true) {
+      firestoreUtil.stopBeingFriends(widget.currentUser.uid, widget.person.uid);
+      Navigator.of(context).pop();
+    }
   }
 }

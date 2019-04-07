@@ -87,6 +87,10 @@ class FirestoreUtil {
         .document(friendUserID)
         .setData({currentUserID: FieldValue.delete()}, merge: true);
   }
+
+  void stopBeingFriends(String currentUserID, String friendUserID) {
+    rejectFriendRequest(currentUserID, friendUserID);
+  }
 }
 
 final FirestoreUtil firestoreUtil = FirestoreUtil();
