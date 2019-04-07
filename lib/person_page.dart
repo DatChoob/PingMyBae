@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/models/notification_stats.dart';
 import 'package:ping_friends/person_stats.dart';
 import 'package:ping_friends/radial_menu.dart';
-import 'package:ping_friends/util/authentication.dart';
 import 'package:ping_friends/util/firestore_util.dart';
 
 class PersonPage extends StatefulWidget {
   final FirestoreUser person;
-  PersonPage({Key key, this.person}) : super(key: key);
+  final FirestoreUser currentUser;
+  PersonPage({Key key, this.person, this.currentUser}) : super(key: key);
 
   _PersonPageState createState() => _PersonPageState();
 }
@@ -17,11 +17,8 @@ class PersonPage extends StatefulWidget {
 class _PersonPageState extends State<PersonPage> {
   @override
   Widget build(BuildContext context) {
-    print("hello hero.${widget.person.uid}");
     return Scaffold(
-      appBar: AppBar(
-        title: Text("${widget.person.displayName}"),
-      ),
+      appBar: AppBar(title: Text("${widget.person.displayName}")),
       body: Column(children: [
         Center(
           child: Container(
@@ -35,31 +32,17 @@ class _PersonPageState extends State<PersonPage> {
             ),
           ),
         ),
-        FutureBuilder(
-            future: authService.user.first,
+        StreamBuilder(
+            stream: firestoreUtil.getStats(
+                widget.currentUser.uid, widget.person.uid),
             builder: (BuildContext context,
-                AsyncSnapshot<FirebaseUser> currentUserAsync) {
-              if (currentUserAsync.hasData) {
-                FirebaseUser currentUser = currentUserAsync.data;
-                print(currentUser.uid);
-                return StreamBuilder(
-                    stream: FirestoreUtil()
-                        .getStats(currentUser.uid, widget.person.uid),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      NotificationStats stats = snapshot.hasData
-                          ? NotificationStats.fromFirebase(snapshot.data.data)
-                          : NotificationStats.empty();
-                      return PersonStats(stats: stats);
-                    });
-              } else
-                return Container();
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
+              NotificationStats stats = snapshot.hasData
+                  ? NotificationStats.fromFirebase(snapshot.data.data)
+                  : NotificationStats.empty();
+              return PersonStats(stats: stats);
             }),
-        Expanded(
-          child: Center(
-            child: RadialMenu(person: widget.person),
-          ),
-        ),
+        Expanded(child: Center(child: RadialMenu(person: widget.person)))
       ]),
     );
   }

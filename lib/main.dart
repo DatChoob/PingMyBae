@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:io' show Platform; //at the top
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
 import 'package:ping_friends/home_page.dart';
 import 'package:ping_friends/login_page.dart';
+import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/util/authentication.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:ping_friends/util/firestore_util.dart';
 
 void main() => runApp(MyApp());
 
@@ -44,7 +46,7 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   AuthStatus authStatus = AuthStatus.NOT_LOGGED_IN;
 
-  String _userId = "";
+  FirestoreUser currentUser;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   Widget _buildDialog(BuildContext context, Item item) {
@@ -122,15 +124,19 @@ class _RootPageState extends State<RootPage> {
       print("Settings registered: $settings");
     });
 
-    authService.user.listen((FirebaseUser user) {
+    authService.currentLoggedInUser.listen((FirestoreUser user) {
       setState(() {
-        if (user != null) {
-          _userId = user?.uid.toString();
-        } else {
-          _userId = "";
-        }
+        currentUser = user;
         authStatus =
-            user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
+            user == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
+      });
+
+      firestoreUtil
+          .getCurrentRelationsSnapshot(currentUser.uid)
+          .map((DocumentSnapshot snapshot) =>
+              snapshot.exists ? snapshot.data : Map())
+          .listen((relationsMap) {
+        setState(() => currentUser.currentRelations = relationsMap);
       });
     });
   }
@@ -154,9 +160,9 @@ class _RootPageState extends State<RootPage> {
         return LoginPage();
         break;
       case AuthStatus.LOGGED_IN:
-        if (_userId.length > 0 && _userId != null) {
+        if (currentUser != null && currentUser.currentRelations != null) {
           return HomePage(
-            userId: _userId,
+            currentUser: currentUser,
           );
         } else
           return _buildWaitingScreen();

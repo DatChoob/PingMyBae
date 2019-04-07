@@ -6,9 +6,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Ping My Friends Login Page'),
-        ),
+        appBar: AppBar(title: Text('Ping My Friends Login Page')),
         body: Container(
             padding: EdgeInsets.all(16.0),
             child: ListView(

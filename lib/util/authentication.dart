@@ -3,50 +3,44 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ping_friends/models/firestore_user.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthService {
-  // Dependencies
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _db = Firestore.instance;
 
   // Shared State for Widgets
-  BehaviorSubject<FirebaseUser> user = BehaviorSubject(); // firebase user
-  Observable<Map<String, dynamic>> profile; // custom user data in Firestore
-  PublishSubject loading = PublishSubject();
+  BehaviorSubject<FirebaseUser> user = BehaviorSubject();
+  // user data in Firestore
+  Observable<FirestoreUser> currentLoggedInUser;
 
-  // constructor
   AuthService() {
     user.addStream(_auth.onAuthStateChanged);
 
-    profile = user.switchMap((FirebaseUser u) {
+    currentLoggedInUser = user.switchMap((FirebaseUser u) {
       if (u != null) {
         return _db
             .collection('users')
             .document(u.uid)
             .snapshots()
-            .map((snap) => snap.data);
+            .map((snap) => FirestoreUser.fromFirestore(snap.data));
       } else {
-        return Observable.just({});
+        return Observable.just(null);
       }
     });
   }
 
   Future<FirebaseUser> googleSignIn() async {
-    // Start
-    loading.add(true);
-
-    // Step 1
     try {
       GoogleSignInAccount googleUser = await _googleSignIn.signIn();
 
-      // Happens whne use cancels google signin
+      // Happens when user cancels google signin
       if (googleUser == null) {
         return null;
       }
 
-      // Step 2
       GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
@@ -55,11 +49,8 @@ class AuthService {
 
       final FirebaseUser user = await _auth.signInWithCredential(credential);
 
-      // Step 3
       updateUserData(user);
 
-      // Done
-      loading.add(false);
       print("signed in " + user.displayName);
       return user;
     } catch (e) {
@@ -68,11 +59,11 @@ class AuthService {
     }
   }
 
-  void updateUserData(FirebaseUser user) async {
+  Future<void> updateUserData(FirebaseUser user) async {
     String fcmToken = await FirebaseMessaging().getToken();
     DocumentReference ref = _db.collection('users').document(user.uid);
 
-    return ref.setData({
+    return await ref.setData({
       'uid': user.uid,
       'email': user.email,
       'photoURL': user.photoUrl,
@@ -88,9 +79,10 @@ class AuthService {
   }
 
   Future<void> updateFcmToken(String uid, String fcmToken) {
-    DocumentReference ref = _db.collection('users').document(uid);
-    print("setting fcm token for $uid, $fcmToken");
-    return ref.setData({'fcmToken': fcmToken}, merge: true);
+    return _db
+        .collection('users')
+        .document(uid)
+        .setData({'fcmToken': fcmToken}, merge: true);
   }
 }
 

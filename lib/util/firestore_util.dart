@@ -1,26 +1,33 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/models/mood.dart';
 
 class FirestoreUtil {
   final Firestore _db = Firestore.instance;
 
-  Stream<QuerySnapshot> getUsers() {
-    return _db.collection('users').snapshots();
+  Future<FirestoreUser> getUser(String userID) async {
+    return FirestoreUser.fromFirestore(
+        (await _db.collection('users').document(userID).get()).data);
   }
 
   Stream<DocumentSnapshot> getStats(String meUID, String personUID) {
     return _db
         .collection('users')
-        .document(meUID)
-        .collection('sentMoods')
         .document(personUID)
+        .collection('sentMoods')
+        .document(meUID)
         .snapshots();
   }
 
-  sentNotification(FirebaseUser me, FirestoreUser person, Mood moodSent) {
+  Future<QuerySnapshot> searchPersonByEmail(String email) {
+    return _db
+        .collection("users")
+        .where('email', isEqualTo: email)
+        .getDocuments();
+  }
+
+  void sentNotification(FirebaseUser me, FirestoreUser person, Mood moodSent) {
     final DocumentReference postRef = _db
         .collection('users')
         .document(me.uid)
@@ -34,62 +41,52 @@ class FirestoreUtil {
           moodKey: (postSnapshot.data[moodKey] ?? 0) + 1,
           'currentMood': moodKey
         });
-        print("updating mood in firebase");
       } else {
         await tx.set(
             postRef, <String, dynamic>{moodKey: 1, 'currentMood': moodKey});
-        print("creating mood in firebase");
       }
     });
   }
-}
 
-class FirestoreUser {
-  String uid;
-  String email;
-  String photoURL;
-  String displayName;
-  String fcmToken;
-  DateTime lastSeen;
-
-  FirestoreUser(
-      {this.uid,
-      this.email,
-      this.photoURL,
-      this.displayName,
-      this.fcmToken,
-      this.lastSeen});
-
-  toJson() {
-    return {
-      'uid': uid,
-      'email': email,
-      'photoURL': photoURL,
-      'displayName': displayName,
-      'fcmToken': fcmToken,
-      'lastSeen': lastSeen
-    };
+  Stream<DocumentSnapshot> getCurrentRelationsSnapshot(String currentUserID) {
+    return _db.collection('friends').document(currentUserID).snapshots();
   }
 
-  static fromFirebaseLogin(FirebaseUser user, String fcmToken) {
-    return FirestoreUser(
-        uid: user.uid,
-        email: user.email,
-        photoURL: user.photoUrl,
-        displayName: user.displayName,
-        fcmToken: fcmToken);
+  void sendFriendRequest(String currentUserID, String friendUserID) {
+    _db
+        .collection('friends')
+        .document(currentUserID)
+        .setData({friendUserID: 'pending'}, merge: true);
+
+    _db
+        .collection('friends')
+        .document(friendUserID)
+        .setData({currentUserID: 'request'}, merge: true);
   }
 
-  static fromFirestore(Map<String, dynamic> map) {
-    return FirestoreUser(
-        uid: map['uid'],
-        email: map['email'],
-        photoURL: map['photoURL'],
-        displayName: map['displayName'],
-        fcmToken: map['fcmToken'],
-        lastSeen: Platform.isIOS
-            ? (map['lastSeen'] as Timestamp).toDate()
-            : (map['lastSeen'] as DateTime));
-    ;
+  void acceptFriendRequest(String currentUserID, String friendUserID) {
+    _db
+        .collection('friends')
+        .document(currentUserID)
+        .setData({friendUserID: 'friend'}, merge: true);
+
+    _db
+        .collection('friends')
+        .document(friendUserID)
+        .setData({currentUserID: 'friend'}, merge: true);
+  }
+
+  void rejectFriendRequest(String currentUserID, String friendUserID) {
+    _db
+        .collection('friends')
+        .document(currentUserID)
+        .setData({friendUserID: FieldValue.delete()}, merge: true);
+
+    _db
+        .collection('friends')
+        .document(friendUserID)
+        .setData({currentUserID: FieldValue.delete()}, merge: true);
   }
 }
+
+final FirestoreUtil firestoreUtil = FirestoreUtil();

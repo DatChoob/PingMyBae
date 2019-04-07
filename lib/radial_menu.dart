@@ -2,6 +2,7 @@ import 'package:fcm_push/fcm_push.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/models/mood.dart';
 import 'package:ping_friends/util/authentication.dart';
 import 'package:ping_friends/util/firestore_util.dart';
@@ -165,7 +166,7 @@ class RadialAnimation extends StatelessWidget {
     await fcm.send(fcmMessage);
 
     // tell firebase that we send a notification
-    FirestoreUtil().sentNotification(currentUser, person, mood);
+    firestoreUtil.sentNotification(currentUser, person, mood);
     //
   }
 }
