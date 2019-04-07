@@ -16,9 +16,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Ping My Friends Home Page')),
-      drawer: new LoggedInDrawer(
-        currentUser: widget.currentUser,
-      ),
+      drawer: new LoggedInDrawer(currentUser: widget.currentUser),
       body: _getUsers(),
     );
   }

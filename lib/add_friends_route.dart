@@ -22,16 +22,13 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
           Row(children: <Widget>[
             Flexible(
                 child: TextFormField(
-              autocorrect: false,
-              decoration: const InputDecoration(
-                icon: Icon(Icons.search),
-                hintText: 'Search For People',
-                labelText: 'Search',
-              ),
-              onFieldSubmitted: (String value) {
-                setState(() => _searchKeywords = value);
-              },
-            ))
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                        icon: Icon(Icons.search),
+                        hintText: 'Search For People',
+                        labelText: 'Search'),
+                    onFieldSubmitted: (String value) =>
+                        setState(() => _searchKeywords = value)))
           ]),
           Flexible(
               child: FutureBuilder(
@@ -106,16 +103,11 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
               "Would you like to send a friend request to ${friend.displayName}?"),
           actions: <Widget>[
             FlatButton(
-              child: Text("Yes"),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
+                child: Text("Yes"),
+                onPressed: () => Navigator.of(context).pop(true)),
             FlatButton(
               child: Text("No"),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
+              onPressed: () => Navigator.of(context).pop(false),
             )
           ],
         );
@@ -136,9 +128,7 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
               actions: <Widget>[
                 FlatButton(
                     child: Text("Okay"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    })
+                    onPressed: () => Navigator.of(context).pop())
               ]);
         });
   }
@@ -152,9 +142,7 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
               actions: <Widget>[
                 FlatButton(
                     child: Text("Okay"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    })
+                    onPressed: () => Navigator.of(context).pop())
               ]);
         });
   }

@@ -50,10 +50,9 @@ class _PersonCardListState extends State<PersonCardList> {
               future: widget.futurePersons[index],
               builder: (BuildContext context,
                   AsyncSnapshot<FirestoreUser> snapshot) {
-                if (snapshot.hasData) {
-                  return _personRowCard(snapshot.data, index);
-                } else
-                  return Center(child: CircularProgressIndicator());
+                return snapshot.hasData
+                    ? _personRowCard(snapshot.data, index)
+                    : Center(child: CircularProgressIndicator());
               });
         });
   }
@@ -93,16 +92,11 @@ class _PersonCardListState extends State<PersonCardList> {
                           "Would you like to accept a friend request from ${friend.displayName}?"),
                       actions: <Widget>[
                         FlatButton(
-                          child: Text("Accept"),
-                          onPressed: () {
-                            Navigator.of(context).pop(true);
-                          },
-                        ),
+                            child: Text("Accept"),
+                            onPressed: () => Navigator.of(context).pop(true)),
                         FlatButton(
                             child: Text("Reject"),
-                            onPressed: () {
-                              Navigator.of(context).pop(false);
-                            })
+                            onPressed: () => Navigator.of(context).pop(false))
                       ]);
                 });
             if (acceptUserAsFriend == true) {
@@ -139,8 +133,6 @@ class _PersonCardListState extends State<PersonCardList> {
   }
 
   void _removeFriendFromList(int index) {
-    setState(() {
-      widget.futurePersons.removeAt(index);
-    });
+    setState(() => widget.futurePersons.removeAt(index));
   }
 }

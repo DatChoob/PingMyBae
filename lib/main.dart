@@ -135,9 +135,8 @@ class _RootPageState extends State<RootPage> {
           .getCurrentRelationsSnapshot(currentUser.uid)
           .map((DocumentSnapshot snapshot) =>
               snapshot.exists ? snapshot.data : Map())
-          .listen((relationsMap) {
-        setState(() => currentUser.currentRelations = relationsMap);
-      });
+          .listen((relationsMap) =>
+              setState(() => currentUser.currentRelations = relationsMap));
     });
   }
 
@@ -161,9 +160,7 @@ class _RootPageState extends State<RootPage> {
         break;
       case AuthStatus.LOGGED_IN:
         if (currentUser != null && currentUser.currentRelations != null) {
-          return HomePage(
-            currentUser: currentUser,
-          );
+          return HomePage(currentUser: currentUser);
         } else
           return _buildWaitingScreen();
         break;

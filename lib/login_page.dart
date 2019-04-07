@@ -15,13 +15,10 @@ class LoginPage extends StatelessWidget {
                 Hero(
                   tag: 'loginHero',
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 70.0),
-                    child: FlutterLogo(
-                      size: 200,
-                    ),
-                  ),
+                      padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 70.0),
+                      child: FlutterLogo(size: 200)),
                 ),
-                GoogleSignInButton(onPressed: authService.googleSignIn),
+                GoogleSignInButton(onPressed: authService.googleSignIn)
               ],
             )));
   }
