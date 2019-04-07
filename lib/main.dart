@@ -14,8 +14,6 @@ import 'package:ping_friends/util/firestore_util.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -24,9 +22,7 @@ class MyApp extends StatelessWidget {
     ]);
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: RootPage(),
     );
   }
@@ -125,18 +121,20 @@ class _RootPageState extends State<RootPage> {
     });
 
     authService.currentLoggedInUser.listen((FirestoreUser user) {
-      setState(() {
-        currentUser = user;
-        authStatus =
-            user == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
-      });
+      if (user != null) {
+        setState(() {
+          currentUser = user;
+          authStatus =
+              user == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
+        });
 
-      firestoreUtil
-          .getCurrentRelationsSnapshot(currentUser.uid)
-          .map((DocumentSnapshot snapshot) =>
-              snapshot.exists ? snapshot.data : Map())
-          .listen((relationsMap) =>
-              setState(() => currentUser.currentRelations = relationsMap));
+        firestoreUtil
+            .getCurrentRelationsSnapshot(currentUser.uid)
+            .map((DocumentSnapshot snapshot) =>
+                snapshot.exists ? snapshot.data : Map<String, dynamic>())
+            .listen((relationsMap) =>
+                setState(() => currentUser.currentRelations = relationsMap));
+      }
     });
   }
 
