@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcm_push/fcm_push.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ping_friends/models/firestore_user.dart';
@@ -22,6 +23,7 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
           Row(children: <Widget>[
             Flexible(
                 child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
                     decoration: const InputDecoration(
                         icon: Icon(Icons.search),
@@ -115,6 +117,7 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
     );
     if (addUserAsFriend == true) {
       firestoreUtil.sendFriendRequest(widget.currentUser.uid, friend.uid);
+      sendFCMNotificationOfRequestSend(widget.currentUser, friend);
       Navigator.of(context).pop();
     }
   }
@@ -145,5 +148,22 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
                     onPressed: () => Navigator.of(context).pop())
               ]);
         });
+  }
+
+  final String serverKey =
+      "AAAAuZeUo-s:APA91bHtlAXklqXnuCnPlcu_F01KJa38jtytOHODZuBlf56Z7B6upzbrYZaGx_hBJeKxMgsNuWfa3-X7GGyeUkMpLn6Yyy-729Y43R_hTI0FCjI5ahhenOn9vCbadUSQOdIMl0ek17my";
+
+  void sendFCMNotificationOfRequestSend(
+      FirestoreUser currentUser, FirestoreUser friend) async {
+    final FCM fcm = FCM(serverKey);
+    final Message fcmMessage = Message()
+      ..to = friend.fcmToken
+      ..title = currentUser.displayName
+      ..body = "${currentUser.displayName} has sent you a friend request";
+
+    // fcmMessage.data.add(Tuple2("type", mood.type));
+    fcmMessage.data.add(Tuple2("fromUser", currentUser.uid));
+
+    await fcm.send(fcmMessage);
   }
 }
