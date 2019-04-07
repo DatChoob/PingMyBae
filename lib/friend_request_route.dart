@@ -107,8 +107,10 @@ class _PersonCardListState extends State<PersonCardList> {
                 });
             if (acceptUserAsFriend == true) {
               _acceptFriendRequest(widget.currentUser.uid, friend.uid);
+              _removeFriendFromList(index);
             } else if (acceptUserAsFriend == false) {
               _rejectFriendRequest(widget.currentUser.uid, friend.uid);
+              _removeFriendFromList(index);
             }
           }),
       actions: <Widget>[
@@ -120,7 +122,7 @@ class _PersonCardListState extends State<PersonCardList> {
       ],
       secondaryActions: <Widget>[
         IconSlideAction(
-          caption: 'Archive',
+          caption: 'Reject',
           color: Colors.red,
           icon: Icons.archive,
         ),
