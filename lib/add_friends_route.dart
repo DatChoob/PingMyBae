@@ -38,7 +38,8 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasData) {
-                      return snapshot.data.documents.length > 0
+                      return snapshot.data.documents.length > 0 &&
+                              _searchKeywords.length != 0
                           ? ListView(
                               children: snapshot.data.documents
                                   .map((documentSnapshot) => _personRowCard(
