@@ -57,7 +57,7 @@ class _RootPageState extends State<RootPage> {
             .listen((relationsMap) =>
                 setState(() => currentUser.currentRelations = relationsMap));
       } else {
-        authStatus = AuthStatus.NOT_LOGGED_IN;
+        setState(() => authStatus = AuthStatus.NOT_LOGGED_IN);
       }
     });
   }

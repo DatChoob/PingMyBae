@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.exit_to_app),
-          onPressed: authService.signOut,
+          onPressed: _confirmLogoutDialog,
         ),
         title: Text('Ping My Friends'),
         actions: <Widget>[
@@ -155,6 +155,30 @@ class _HomePageState extends State<HomePage> {
                 return Center(child: CircularProgressIndicator());
             });
       }).toList());
+    }
+  }
+
+  void _confirmLogoutDialog() async {
+    bool logout = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Log out"),
+          content: Text("Are you sure you want to logout?"),
+          actions: <Widget>[
+            FlatButton(
+                child: Text("Yes"),
+                onPressed: () => Navigator.of(context).pop(true)),
+            FlatButton(
+              child: Text("No"),
+              onPressed: () => Navigator.of(context).pop(false),
+            )
+          ],
+        );
+      },
+    );
+    if (logout == true) {
+      authService.signOut();
     }
   }
 }
