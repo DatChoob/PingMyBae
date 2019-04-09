@@ -106,8 +106,7 @@ class RadialAnimation extends StatelessWidget {
                 child: FloatingActionButton(
                     heroTag: "close",
                     child: Icon(FontAwesomeIcons.timesCircle),
-                    onPressed: _close,
-                    backgroundColor: Colors.red),
+                    onPressed: _close),
               ),
               Transform.scale(
                 scale: scale.value,
@@ -160,8 +159,9 @@ class RadialAnimation extends StatelessWidget {
       ..title = currentUser.displayName
       ..body = "${currentUser.displayName} ${mood.message}";
 
-    fcmMessage.data.add(Tuple2("type", mood.type));
+    fcmMessage.data.add(Tuple2("type", 'mood'));
     fcmMessage.data.add(Tuple2("fromUser", currentUser.uid));
+    fcmMessage.data.add(Tuple2("click_action", "FLUTTER_NOTIFICATION_CLICK"));
 
     await fcm.send(fcmMessage);
 

@@ -11,27 +11,31 @@ class FirestoreUtil {
         (await _db.collection('users').document(userID).get()).data);
   }
 
+  final String SENT_MOODS = 'sentMoods';
+  final String FRIENDS = 'friends';
+  final String USERS = 'users';
+
   Stream<DocumentSnapshot> getStats(String meUID, String personUID) {
     return _db
-        .collection('users')
+        .collection(USERS)
         .document(personUID)
-        .collection('sentMoods')
+        .collection(SENT_MOODS)
         .document(meUID)
         .snapshots();
   }
 
   Future<QuerySnapshot> searchPersonByEmail(String email) {
     return _db
-        .collection("users")
+        .collection(USERS)
         .where('email', isEqualTo: email)
         .getDocuments();
   }
 
   void sentNotification(FirebaseUser me, FirestoreUser person, Mood moodSent) {
     final DocumentReference postRef = _db
-        .collection('users')
+        .collection(USERS)
         .document(me.uid)
-        .collection('sentMoods')
+        .collection(SENT_MOODS)
         .document(person.uid);
     Firestore.instance.runTransaction((Transaction tx) async {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
@@ -49,47 +53,61 @@ class FirestoreUtil {
   }
 
   Stream<DocumentSnapshot> getCurrentRelationsSnapshot(String currentUserID) {
-    return _db.collection('friends').document(currentUserID).snapshots();
+    return _db.collection(FRIENDS).document(currentUserID).snapshots();
   }
 
   void sendFriendRequest(String currentUserID, String friendUserID) {
-    _db
-        .collection('friends')
-        .document(currentUserID)
-        .setData({friendUserID: 'pending'}, merge: true);
+    _sendFriendRequest(currentUserID, friendUserID);
+    _sendFriendRequest(friendUserID, currentUserID);
+  }
 
+  _sendFriendRequest(String documentID, String friendUserID) {
     _db
-        .collection('friends')
-        .document(friendUserID)
-        .setData({currentUserID: 'request'}, merge: true);
+        .collection(FRIENDS)
+        .document(documentID)
+        .setData({friendUserID: 'request'}, merge: true);
   }
 
   void acceptFriendRequest(String currentUserID, String friendUserID) {
-    _db
-        .collection('friends')
-        .document(currentUserID)
-        .setData({friendUserID: 'friend'}, merge: true);
+    _acceptFriendRequest(currentUserID, friendUserID);
+    _acceptFriendRequest(friendUserID, currentUserID);
+  }
 
+  _acceptFriendRequest(String documentID, String friendUserID) {
     _db
-        .collection('friends')
-        .document(friendUserID)
-        .setData({currentUserID: 'friend'}, merge: true);
+        .collection(FRIENDS)
+        .document(documentID)
+        .setData({friendUserID: 'friend'}, merge: true);
   }
 
   void rejectFriendRequest(String currentUserID, String friendUserID) {
-    _db
-        .collection('friends')
-        .document(currentUserID)
-        .setData({friendUserID: FieldValue.delete()}, merge: true);
+    _rejectFriendRequest(currentUserID, friendUserID);
+    _rejectFriendRequest(friendUserID, currentUserID);
+  }
 
+  void _rejectFriendRequest(String documentID, String friendUserID) {
     _db
-        .collection('friends')
-        .document(friendUserID)
-        .setData({currentUserID: FieldValue.delete()}, merge: true);
+        .collection(FRIENDS)
+        .document(documentID)
+        .setData({friendUserID: FieldValue.delete()}, merge: true);
   }
 
   void stopBeingFriends(String currentUserID, String friendUserID) {
     rejectFriendRequest(currentUserID, friendUserID);
+
+    //remove the SENT_MOODS from both users
+    _removeSentMoods(currentUserID, friendUserID);
+    _removeSentMoods(friendUserID, currentUserID);
+  }
+
+  void _removeSentMoods(String documentID, String friendUserID) {
+    _db
+        .collection(USERS)
+        .document(documentID)
+        .collection(SENT_MOODS)
+        .document(friendUserID)
+        .delete()
+        .then((val) {});
   }
 }
 

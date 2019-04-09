@@ -1,9 +1,13 @@
+import 'dart:async';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:ping_friends/add_friends_route.dart';
 import 'package:ping_friends/friend_request_route.dart';
 import 'package:ping_friends/models/firestore_user.dart';
+import 'package:ping_friends/models/notification_from_message.dart';
 import 'package:ping_friends/person_page.dart';
 import 'package:ping_friends/util/authentication.dart';
+import 'package:ping_friends/util/firestore_util.dart';
 
 class HomePage extends StatefulWidget {
   final FirestoreUser currentUser;
@@ -12,13 +16,107 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.configure(
+      //android/ios: triggered when in the app in foreground
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        _navigateToItemDetail(message);
+      },
+      //app in background and user clicks notification from system tray.
+      //route user to friend page  or pending requests page
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        _navigateToItemDetail(message);
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    int numFriendRequests = widget.currentUser.getFriendRequests().length;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Ping My Friends Home Page')),
-      drawer: new LoggedInDrawer(currentUser: widget.currentUser),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.exit_to_app),
+          onPressed: authService.signOut,
+        ),
+        title: Text('Ping My Friends'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.person_add),
+            onPressed: _openAddFriendsPage,
+          ),
+          numFriendRequests > 0
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                  child: GestureDetector(
+                    child: Chip(
+                        label: Text('$numFriendRequests',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                        backgroundColor: Colors.red),
+                    onTap: _openPendingFriendRequestsPage,
+                  ),
+                )
+              : Container(width: 0, height: 0)
+        ],
+      ),
       body: _getUsers(),
     );
+  }
+
+  _openAddFriendsPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                AddFriendsRoute(currentUser: widget.currentUser)));
+  }
+
+  _openPendingFriendRequestsPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                FriendRequestRoute(currentUser: widget.currentUser)));
+  }
+
+  void _navigateToItemDetail(Map<String, dynamic> message) async {
+    final NotifactionFromMessage item =
+        NotifactionFromMessage.fromNotification(message);
+
+    if (item.isMoodType) {
+      FirestoreUser person = await firestoreUtil.getUser(item.fromUserID);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => PersonPage(
+                    person: person,
+                    currentUser: widget.currentUser,
+                  )));
+    } else if (item.isFriendRequestType) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) =>
+                  FriendRequestRoute(currentUser: widget.currentUser)));
+    }
   }
 
   _getUsers() {
@@ -58,75 +156,5 @@ class _HomePageState extends State<HomePage> {
             });
       }).toList());
     }
-  }
-}
-
-class LoggedInDrawer extends StatelessWidget {
-  final FirestoreUser currentUser;
-  LoggedInDrawer({Key key, this.currentUser}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    int numFriendRequests = currentUser.getFriendRequests().length;
-    return Drawer(
-        child: ListView(padding: EdgeInsets.zero, children: <Widget>[
-      DrawerHeader(
-          child: Row(children: <Widget>[
-            ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: (currentUser != null)
-                    ? Image.network(currentUser.photoURL, width: 55)
-                    : Container(
-                        width: 70.0,
-                        height: 70.0,
-                        child: CircleAvatar(
-                            backgroundColor: Colors.red,
-                            child: Text('A'.toUpperCase(),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w100,
-                                    fontSize: 50))))),
-            Text(currentUser.displayName)
-          ]),
-          decoration: BoxDecoration(color: Colors.blue)),
-      ListTile(
-          title: Text('Add Friends'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        AddFriendsRoute(currentUser: currentUser)));
-          }),
-      ListTile(
-          title: Row(children: [
-            Text('Pending Friends Requests'),
-            numFriendRequests > 0
-                ? Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                    child: Chip(
-                        label: Text('${numFriendRequests}',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                        backgroundColor: Colors.red))
-                : Container(width: 0, height: 0)
-          ]),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        FriendRequestRoute(currentUser: currentUser)));
-          }),
-      ListTile(
-          title: Text('Log out'),
-          onTap: () {
-            Navigator.pop(context);
-            authService.signOut();
-          })
-    ]));
   }
 }

@@ -27,8 +27,8 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
                     autocorrect: false,
                     decoration: const InputDecoration(
                         icon: Icon(Icons.search),
-                        hintText: 'Search For People',
-                        labelText: 'Search'),
+                        hintText: 'Search by email',
+                        labelText: 'Search for Friends'),
                     onFieldSubmitted: (String value) =>
                         setState(() => _searchKeywords = value)))
           ]),
@@ -38,19 +38,18 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data != null) {
-                        return ListView(
-                            children: snapshot.data.documents
-                                .map((documentSnapshot) => _personRowCard(
-                                    documentSnapshot.data, context))
-                                .toList());
-                      } else {
-                        return Container(child: Text("No Data Returned"));
-                      }
+                      return snapshot.data.documents.length > 0
+                          ? ListView(
+                              children: snapshot.data.documents
+                                  .map((documentSnapshot) => _personRowCard(
+                                      documentSnapshot.data, context))
+                                  .toList())
+                          : Padding(
+                              padding: EdgeInsets.symmetric(vertical: 24),
+                              child: Text("No Results Found"),
+                            );
                     } else {
-                      return Container(
-                          alignment: Alignment.center,
-                          child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator());
                     }
                   }))
         ]));
@@ -161,8 +160,9 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
       ..title = currentUser.displayName
       ..body = "${currentUser.displayName} has sent you a friend request";
 
-    // fcmMessage.data.add(Tuple2("type", mood.type));
+    fcmMessage.data.add(Tuple2("type", "friend_request"));
     fcmMessage.data.add(Tuple2("fromUser", currentUser.uid));
+    fcmMessage.data.add(Tuple2("click_action", "FLUTTER_NOTIFICATION_CLICK"));
 
     await fcm.send(fcmMessage);
   }

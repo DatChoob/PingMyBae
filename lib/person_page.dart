@@ -18,7 +18,15 @@ class _PersonPageState extends State<PersonPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("${widget.person.displayName}")),
+      appBar: AppBar(
+        title: Text("${widget.person.displayName}"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.delete_forever),
+            onPressed: _showDialogStopBeingFriends,
+          )
+        ],
+      ),
       body: Column(children: [
         Center(
           child: Container(
@@ -30,14 +38,6 @@ class _PersonPageState extends State<PersonPage> {
                 child: Image.network(widget.person.photoURL),
               ),
             ),
-          ),
-        ),
-        Container(
-          height: 30,
-          child: RaisedButton(
-            color: Colors.redAccent,
-            child: Text("Stop being friends"),
-            onPressed: _showDialogStopBeingFriends,
           ),
         ),
         StreamBuilder(
