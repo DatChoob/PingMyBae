@@ -136,8 +136,7 @@ class RadialAnimation extends StatelessWidget {
               heroTag: "icon.${icon.hashCode}",
               child: Icon(icon),
               backgroundColor: color,
-              onPressed: () => sendNotification(mood),
-              elevation: 0),
+              onPressed: () => sendNotification(mood)),
         ),
       ),
     );
