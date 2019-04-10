@@ -34,7 +34,7 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
           ]),
           Flexible(
               child: FutureBuilder(
-                  future: firestoreUtil.searchPersonByEmail(_searchKeywords),
+                  future: firestoreUtil.searchFriendByEmail(_searchKeywords),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasData) {
@@ -42,7 +42,7 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
                               _searchKeywords.length != 0
                           ? ListView(
                               children: snapshot.data.documents
-                                  .map((documentSnapshot) => _personRowCard(
+                                  .map((documentSnapshot) => _friendRowCard(
                                       documentSnapshot.data, context))
                                   .toList())
                           : Padding(
@@ -56,7 +56,7 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
         ]));
   }
 
-  ListTile _personRowCard(Map<String, dynamic> data, BuildContext context) {
+  ListTile _friendRowCard(Map<String, dynamic> data, BuildContext context) {
     FirestoreUser friend = FirestoreUser.fromFirestore(data);
 // if already friend.  add a check mark stating already friend.
 // clicking on tile should pop dialog. Name is already your friend.

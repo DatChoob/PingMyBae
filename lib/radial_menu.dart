@@ -16,8 +16,8 @@ final String serverKey =
 // Got this code from https://fireship.io/lessons/flutter-radial-menu-staggered-animations/
 // Credit to Jeff Delaney
 class RadialMenu extends StatefulWidget {
-  final FirestoreUser person;
-  RadialMenu({Key key, this.person}) : super(key: key);
+  final FirestoreUser friend;
+  RadialMenu({Key key, this.friend}) : super(key: key);
 
   @override
   _RadialMenuState createState() => _RadialMenuState();
@@ -36,7 +36,7 @@ class _RadialMenuState extends State<RadialMenu>
 
   @override
   Widget build(BuildContext context) {
-    return RadialAnimation(controller: controller, person: widget.person);
+    return RadialAnimation(controller: controller, friend: widget.friend);
   }
 }
 
@@ -45,8 +45,8 @@ class RadialAnimation extends StatelessWidget {
   final AnimationController controller;
   Animation<double> scale;
   Animation<double> translation;
-  final FirestoreUser person;
-  RadialAnimation({Key key, this.controller, this.person}) {
+  final FirestoreUser friend;
+  RadialAnimation({Key key, this.controller, this.friend}) {
     scale = Tween<double>(
       begin: 1.5,
       end: 0.0,
@@ -154,7 +154,7 @@ class RadialAnimation extends StatelessWidget {
     final FCM fcm = FCM(serverKey);
     FirebaseUser currentUser = await authService.user.first.then((a) => a);
     final Message fcmMessage = Message()
-      ..to = person.fcmToken
+      ..to = friend.fcmToken
       ..title = currentUser.displayName
       ..body = "${currentUser.displayName} ${mood.message}";
 
@@ -165,7 +165,7 @@ class RadialAnimation extends StatelessWidget {
     await fcm.send(fcmMessage);
 
     // tell firebase that we send a notification
-    firestoreUtil.sentNotification(currentUser, person, mood);
+    firestoreUtil.sentNotification(currentUser, friend, mood);
     //
   }
 }

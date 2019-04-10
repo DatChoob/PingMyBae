@@ -15,28 +15,28 @@ class FirestoreUtil {
   final String FRIENDS = 'friends';
   final String USERS = 'users';
 
-  Stream<DocumentSnapshot> getStats(String meUID, String personUID) {
+  Stream<DocumentSnapshot> getStats(String meUID, String friendUID) {
     return _db
         .collection(USERS)
-        .document(personUID)
+        .document(friendUID)
         .collection(SENT_MOODS)
         .document(meUID)
         .snapshots();
   }
 
-  Future<QuerySnapshot> searchPersonByEmail(String email) {
+  Future<QuerySnapshot> searchFriendByEmail(String email) {
     return _db
         .collection(USERS)
         .where('email', isEqualTo: email)
         .getDocuments();
   }
 
-  void sentNotification(FirebaseUser me, FirestoreUser person, Mood moodSent) {
+  void sentNotification(FirebaseUser me, FirestoreUser friend, Mood moodSent) {
     final DocumentReference postRef = _db
         .collection(USERS)
         .document(me.uid)
         .collection(SENT_MOODS)
-        .document(person.uid);
+        .document(friend.uid);
     Firestore.instance.runTransaction((Transaction tx) async {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
       String moodKey = '${moodSent.type}';

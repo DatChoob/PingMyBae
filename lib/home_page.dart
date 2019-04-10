@@ -5,7 +5,7 @@ import 'package:ping_friends/add_friends_route.dart';
 import 'package:ping_friends/friend_request_route.dart';
 import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/models/notification_from_message.dart';
-import 'package:ping_friends/person_page.dart';
+import 'package:ping_friends/friend_page.dart';
 import 'package:ping_friends/util/authentication.dart';
 import 'package:ping_friends/util/firestore_util.dart';
 
@@ -102,12 +102,12 @@ class _HomePageState extends State<HomePage> {
         NotifactionFromMessage.fromNotification(message);
 
     if (item.isMoodType) {
-      FirestoreUser person = await firestoreUtil.getUser(item.fromUserID);
+      FirestoreUser friend = await firestoreUtil.getUser(item.fromUserID);
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) => PersonPage(
-                    person: person,
+              builder: (_) => FriendPage(
+                    friend: friend,
                     currentUser: widget.currentUser,
                   )));
     } else if (item.isFriendRequestType) {
@@ -146,8 +146,8 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => PersonPage(
-                                    person: user,
+                              builder: (_) => FriendPage(
+                                    friend: user,
                                     currentUser: widget.currentUser,
                                   )));
                     });

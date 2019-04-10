@@ -24,40 +24,40 @@ class _FriendRequestRouteState extends State<FriendRequestRoute> {
         widget.currentUser.getFriendRequests();
     return futureFriendRequests.isEmpty
         ? Center(child: Text("You have no friend requests"))
-        : PersonCardList(
-            futurePersons: futureFriendRequests,
+        : FriendCardList(
+            futureFriends: futureFriendRequests,
             currentUser: widget.currentUser);
   }
 }
 
-class PersonCardList extends StatefulWidget {
-  final List<Future<FirestoreUser>> futurePersons;
+class FriendCardList extends StatefulWidget {
+  final List<Future<FirestoreUser>> futureFriends;
   final FirestoreUser currentUser;
-  PersonCardList({Key key, this.futurePersons, this.currentUser})
+  FriendCardList({Key key, this.futureFriends, this.currentUser})
       : super(key: key);
 
   @override
-  _PersonCardListState createState() => _PersonCardListState();
+  _FriendCardListState createState() => _FriendCardListState();
 }
 
-class _PersonCardListState extends State<PersonCardList> {
+class _FriendCardListState extends State<FriendCardList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: widget.futurePersons.length,
+        itemCount: widget.futureFriends.length,
         itemBuilder: (BuildContext context, int index) {
           return FutureBuilder(
-              future: widget.futurePersons[index],
+              future: widget.futureFriends[index],
               builder: (BuildContext context,
                   AsyncSnapshot<FirestoreUser> snapshot) {
                 return snapshot.hasData
-                    ? _personRowCard(snapshot.data, index)
+                    ? _friendRowCard(snapshot.data, index)
                     : Center(child: CircularProgressIndicator());
               });
         });
   }
 
-  _personRowCard(FirestoreUser friend, int index) {
+  _friendRowCard(FirestoreUser friend, int index) {
     return Slidable(
       delegate: new SlidableDrawerDelegate(),
       actionExtentRatio: 0.25,
@@ -134,7 +134,7 @@ class _PersonCardListState extends State<PersonCardList> {
 
   void _removeFriendFromList(int index) {
     setState(() {
-      widget.futurePersons.removeAt(index);
+      widget.futureFriends.removeAt(index);
     });
   }
 }

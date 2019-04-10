@@ -3,9 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ping_friends/models/mood.dart';
 import 'package:ping_friends/models/notification_stats.dart';
 
-class PersonStats extends StatelessWidget {
+class FriendStats extends StatelessWidget {
   final NotificationStats stats;
-  const PersonStats({Key key, this.stats}) : super(key: key);
+  const FriendStats({Key key, this.stats}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
