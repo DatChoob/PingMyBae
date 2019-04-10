@@ -5,13 +5,12 @@ class NotifactionFromMessage {
   final String fromUserID;
   NotifactionFromMessage({this.notificationType, this.fromUserID});
   factory NotifactionFromMessage.fromNotification(
-      Map<String, dynamic> message) {
-    if (!Platform.isAndroid) {
+      Map<dynamic, dynamic> message) {
+    if (Platform.isAndroid) {
       message = message['data'];
     }
     return NotifactionFromMessage(
-        fromUserID: message['data']['fromUser'],
-        notificationType: message['data']['type']);
+        fromUserID: message['fromUser'], notificationType: message['type']);
   }
   get isMoodType => notificationType == 'mood';
   get isFriendRequestType => notificationType == 'friend_request';
