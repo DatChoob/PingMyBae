@@ -4,16 +4,16 @@ import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/models/mood.dart';
 
 class FirestoreUtil {
+  static const String SENT_MOODS = 'sentMoods';
+  static const String FRIENDS = 'friends';
+  static const String USERS = 'users';
+
   final Firestore _db = Firestore.instance;
 
   Future<FirestoreUser> getUser(String userID) async {
     return FirestoreUser.fromFirestore(
         (await _db.collection('users').document(userID).get()).data);
   }
-
-  final String SENT_MOODS = 'sentMoods';
-  final String FRIENDS = 'friends';
-  final String USERS = 'users';
 
   Stream<DocumentSnapshot> getStats(String meUID, String friendUID) {
     return _db

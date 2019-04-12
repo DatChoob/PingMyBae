@@ -37,5 +37,6 @@ class Mood {
         return mood;
       }
     }
+    return null;
   }
 }

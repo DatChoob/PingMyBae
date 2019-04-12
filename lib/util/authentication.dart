@@ -56,6 +56,7 @@ class AuthService {
     } catch (e) {
       print("Error occured with google sign in");
       print(e);
+      return null;
     }
   }
 

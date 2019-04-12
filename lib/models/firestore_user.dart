@@ -69,6 +69,5 @@ class FirestoreUser {
         lastSeen: Platform.isIOS
             ? (map['lastSeen'] as Timestamp).toDate()
             : (map['lastSeen'] as DateTime));
-    ;
   }
 }
