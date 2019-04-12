@@ -19,7 +19,8 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Add Friends")),
-        body: Column(children: [
+        body: SafeArea(
+            child: Column(children: [
           Row(children: <Widget>[
             Flexible(
                 child: TextFormField(
@@ -53,7 +54,7 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
                       return Center(child: CircularProgressIndicator());
                     }
                   }))
-        ]));
+        ])));
   }
 
   ListTile _friendRowCard(Map<String, dynamic> data, BuildContext context) {

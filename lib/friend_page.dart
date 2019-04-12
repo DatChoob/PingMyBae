@@ -27,7 +27,8 @@ class _FriendPageState extends State<FriendPage> {
           )
         ],
       ),
-      body: Column(children: [
+      body: SafeArea(
+          child: Column(children: [
         Center(
           child: Container(
             margin: const EdgeInsets.only(top: 20.0, bottom: 10.0),
@@ -51,7 +52,7 @@ class _FriendPageState extends State<FriendPage> {
               return FriendStats(stats: stats);
             }),
         Expanded(child: Center(child: RadialMenu(friend: widget.friend)))
-      ]),
+      ])),
     );
   }
 

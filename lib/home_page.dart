@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
               : Container(width: 0, height: 0)
         ],
       ),
-      body: _getUsers(),
+      body: SafeArea(child: _getUsers()),
     );
   }
 

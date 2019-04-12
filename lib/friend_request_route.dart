@@ -16,10 +16,10 @@ class _FriendRequestRouteState extends State<FriendRequestRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Friend Requests")),
-        body: Container(child: _getFriendRequestList()));
+        body: SafeArea(child: Container(child: _getFriendRequestList())));
   }
 
-  _getFriendRequestList() {
+  Widget _getFriendRequestList() {
     List<Future<FirestoreUser>> futureFriendRequests =
         widget.currentUser.getFriendRequests();
     return futureFriendRequests.isEmpty

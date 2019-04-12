@@ -64,11 +64,12 @@ class _RootPageState extends State<RootPage> {
 
   Widget _buildWaitingScreen() {
     return Scaffold(
-      body: Container(
+        body: SafeArea(
+      child: Container(
         alignment: Alignment.center,
         child: CircularProgressIndicator(),
       ),
-    );
+    ));
   }
 
   @override
