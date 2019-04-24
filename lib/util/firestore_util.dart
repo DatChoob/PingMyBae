@@ -80,15 +80,15 @@ class FirestoreUtil {
   }
 
   void sendFriendRequest(String currentUserID, String friendUserID) {
-    _sendFriendRequest(currentUserID, friendUserID);
-    _sendFriendRequest(friendUserID, currentUserID);
-  }
-
-  _sendFriendRequest(String documentID, String friendUserID) {
     _db
         .collection(FRIENDS)
-        .document(documentID)
-        .setData({friendUserID: 'request'}, merge: true);
+        .document(currentUserID)
+        .setData({friendUserID: 'pending'}, merge: true);
+
+    _db
+        .collection(FRIENDS)
+        .document(friendUserID)
+        .setData({currentUserID: 'request'}, merge: true);
   }
 
   void acceptFriendRequest(String currentUserID, String friendUserID) {

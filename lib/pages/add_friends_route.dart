@@ -70,7 +70,7 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
     bool hasRequestedToBeFriend = false;
     if (currentFriends?.containsKey(friend.uid) == true) {
       isFriendAlready = currentFriends[friend.uid] == 'friend';
-      hasRequestedToBeFriend = currentFriends[friend.uid] == 'request';
+      hasRequestedToBeFriend = currentFriends[friend.uid] == 'pending';
     }
 
     return ListTile(
