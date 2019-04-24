@@ -45,7 +45,18 @@ class _FriendPageState extends State<FriendPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.friend.displayName}"),
+        title: Center(
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Hero(
+            tag: "hero.${widget.friend.uid}",
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(40.0),
+              child: Image.network(widget.friend.photoURL),
+            ),
+          ),
+          SizedBox(width: 10),
+          Text("${widget.friend.displayName}")
+        ])),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.delete_forever),
@@ -54,24 +65,11 @@ class _FriendPageState extends State<FriendPage> {
         ],
       ),
       body: SafeArea(
-          child: Column(children: [
-        Center(
           child: Container(
-            margin: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-            child: Hero(
-              tag: "hero.${widget.friend.uid}",
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.network(widget.friend.photoURL),
-              ),
-            ),
-          ),
-        ),
-        SwipableResponses(
-            currentUser: widget.currentUser,
-            friend: widget.friend,
-            stats: stats)
-      ])),
+              child: SwipableResponses(
+                  currentUser: widget.currentUser,
+                  friend: widget.friend,
+                  stats: stats))),
     );
   }
 
@@ -116,34 +114,30 @@ class SwipableResponses extends StatefulWidget {
 class _SwipableResponsesState extends State<SwipableResponses> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Swiper(
+    return Swiper(
       itemBuilder: (BuildContext context, int index) {
-        print(index);
-        if (index == 0) {
-          return Column(children: [
-            FriendMoodStats(stats: widget.stats),
-            Expanded(
-                child: Center(
-                    child: MoodRadialMenu(
-                        friend: widget.friend,
-                        currentUser: widget.currentUser)))
-          ]);
-        } else {
-          return Column(children: [
-            FriendReactionStats(stats: widget.stats),
-            Expanded(
-                child: Center(
-                    child: ReactionRadialMenu(
-                        friend: widget.friend,
-                        currentUser: widget.currentUser)))
-          ]);
-        }
+        return index == 0
+            ? Column(children: [
+                FriendMoodStats(stats: widget.stats),
+                Expanded(
+                    child: Center(
+                        child: MoodRadialMenu(
+                            friend: widget.friend,
+                            currentUser: widget.currentUser)))
+              ])
+            : Column(children: [
+                FriendReactionStats(stats: widget.stats),
+                Expanded(
+                    child: Center(
+                        child: ReactionRadialMenu(
+                            friend: widget.friend,
+                            currentUser: widget.currentUser)))
+              ]);
       },
       itemCount: 2,
       pagination: SwiperPagination(builder: SwiperPagination.dots),
       control: SwiperControl(),
-    ));
+    );
   }
 
   final String serverKey =
