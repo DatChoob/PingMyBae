@@ -18,7 +18,7 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Add Friends")),
+        appBar: AppBar(elevation: 0, title: Text("Add Friends")),
         body: SafeArea(
             child: Column(children: [
           Row(children: <Widget>[

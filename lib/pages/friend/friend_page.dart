@@ -45,6 +45,7 @@ class _FriendPageState extends State<FriendPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Center(
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Hero(

@@ -15,7 +15,7 @@ class _FriendRequestRouteState extends State<FriendRequestRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Friend Requests")),
+        appBar: AppBar(elevation: 0, title: Text("Friend Requests")),
         body: SafeArea(child: Container(child: _getFriendRequestList())));
   }
 

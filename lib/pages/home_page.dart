@@ -49,9 +49,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     int numFriendRequests = widget.currentUser.getFriendRequests().length;
-
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.exit_to_app),
           onPressed: _confirmLogoutDialog,
