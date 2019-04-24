@@ -27,16 +27,10 @@ class ReactionRadialMenu extends StatelessWidget {
           color: Colors.green,
           icon: FontAwesomeIcons.handPaper,
           reaction: MoodReaction.WAVE),
-      // _buildButton(
-      //     color: Colors.pinkAccent,
-      //     icon: FontAwesomeIcons.sadTear,
-      //     reaction: MoodReaction.SOUNDS_GOOD),
-
       _buildButton(
           color: Colors.deepOrange,
           icon: Icons.thumb_down,
           reaction: MoodReaction.THUMBS_DOWN),
-
       _buildButton(
           color: Colors.indigo,
           icon: Icons.fastfood,

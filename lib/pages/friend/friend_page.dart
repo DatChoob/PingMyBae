@@ -67,12 +67,10 @@ class _FriendPageState extends State<FriendPage> {
             ),
           ),
         ),
-
         SwipableResponses(
             currentUser: widget.currentUser,
             friend: widget.friend,
             stats: stats)
-        // Expanded(child: Center(child: RadialMenu(friend: widget.friend)))
       ])),
     );
   }
@@ -150,18 +148,4 @@ class _SwipableResponsesState extends State<SwipableResponses> {
 
   final String serverKey =
       "AAAAuZeUo-s:APA91bHtlAXklqXnuCnPlcu_F01KJa38jtytOHODZuBlf56Z7B6upzbrYZaGx_hBJeKxMgsNuWfa3-X7GGyeUkMpLn6Yyy-729Y43R_hTI0FCjI5ahhenOn9vCbadUSQOdIMl0ek17my";
-
-  // sendReactionNotification(String text) async {
-  //   final FCM fcm = FCM(serverKey);
-  //   final Message fcmMessage = Message()
-  //     ..to = widget.friend.fcmToken
-  //     ..title = widget.currentUser.displayName
-  //     ..body = "${widget.currentUser.displayName} said  $text";
-
-  //   fcmMessage.data.add(Tuple2("type", 'mood'));
-  //   fcmMessage.data.add(Tuple2("fromUser", widget.currentUser.uid));
-  //   fcmMessage.data.add(Tuple2("click_action", "FLUTTER_NOTIFICATION_CLICK"));
-
-  //   await fcm.send(fcmMessage);
-  // }
 }

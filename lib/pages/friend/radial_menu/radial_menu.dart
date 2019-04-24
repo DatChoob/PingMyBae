@@ -106,12 +106,7 @@ class RadialAnimation extends StatelessWidget {
       translatedButtons.add(Transform(
           transform: Matrix4.translation(Vector3((translation.value) * cos(rad),
               (translation.value) * sin(rad), 0)),
-          child: Container(
-              // constraints: BoxConstraints.tight(Size.square(500)),
-              alignment: Alignment.center,
-              // decoration:
-              //     BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-              child: button)));
+          child: Container(alignment: Alignment.center, child: button)));
     }
     return translatedButtons;
   }
