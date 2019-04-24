@@ -15,6 +15,7 @@ class ReactionRadialMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RadialMenu(
+        key: Key('reaction'),
         friend: friend,
         currentUser: currentUser,
         buttons: buildReactionButtons());

@@ -35,6 +35,7 @@ class _RadialMenuState extends State<RadialMenu>
   @override
   Widget build(BuildContext context) {
     return RadialAnimation(
+        key: widget.key,
         controller: controller,
         currentUser: widget.currentUser,
         friend: widget.friend,
@@ -50,9 +51,13 @@ class RadialAnimation extends StatelessWidget {
   final FirestoreUser friend;
   final FirestoreUser currentUser;
   final List<Widget> buttons;
-
+  Key key;
   RadialAnimation(
-      {Key key, this.controller, this.currentUser, this.friend, this.buttons}) {
+      {this.key,
+      this.controller,
+      this.currentUser,
+      this.friend,
+      this.buttons}) {
     scale = Tween<double>(
       begin: 1.5,
       end: 0.0,
@@ -78,14 +83,14 @@ class RadialAnimation extends StatelessWidget {
                 // subtract the beginning value to run the opposite animation
                 scale: scale.value - 1.5,
                 child: FloatingActionButton(
-                    heroTag: "close${buttons.length}",
+                    heroTag: "close$key",
                     child: Icon(FontAwesomeIcons.timesCircle),
                     onPressed: _close),
               ))
               ..add(Transform.scale(
                 scale: scale.value,
                 child: FloatingActionButton(
-                    heroTag: "open${buttons.length}",
+                    heroTag: "open$key",
                     child: Icon(FontAwesomeIcons.solidDotCircle),
                     onPressed: _open),
               )),

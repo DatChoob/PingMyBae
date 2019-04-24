@@ -15,7 +15,10 @@ class MoodRadialMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RadialMenu(
-        friend: friend, currentUser: currentUser, buttons: buildMoodButtons());
+        key: Key('mood'),
+        friend: friend,
+        currentUser: currentUser,
+        buttons: buildMoodButtons());
   }
 
   List<Widget> buildMoodButtons() {
@@ -64,7 +67,6 @@ class MoodRadialMenu extends StatelessWidget {
 
   void sendMoodNotification(Mood mood) async {
     final FCM fcm = FCM(serverKey);
-    // FirebaseUser currentUser = await authService.user.first.then((a) => a);
     final Message fcmMessage = Message()
       ..to = friend.fcmToken
       ..title = currentUser.displayName
@@ -77,7 +79,7 @@ class MoodRadialMenu extends StatelessWidget {
     await fcm.send(fcmMessage);
 
     // tell firebase that we send a notification
-    firestoreUtil.sentNotification(currentUser, friend, mood);
+    firestoreUtil.sentMoodNotification(currentUser, friend, mood);
     //
   }
 }
