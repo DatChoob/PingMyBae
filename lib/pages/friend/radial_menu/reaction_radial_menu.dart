@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/models/mood_reaction.dart';
-import 'package:ping_friends/radial_menu.dart';
+import 'package:ping_friends/pages/friend/radial_menu/radial_menu.dart';
 import 'package:ping_friends/util/firestore_util.dart';
 
 class ReactionRadialMenu extends StatelessWidget {

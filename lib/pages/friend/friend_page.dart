@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ping_friends/friend_mood_stats.dart';
-import 'package:ping_friends/friend_reaction_stats.dart';
 import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/models/notification_stats.dart';
-import 'package:ping_friends/mood_radial_menu.dart';
-import 'package:ping_friends/reaction_radial_menu.dart';
+import 'package:ping_friends/pages/friend/friend_mood_stats.dart';
+import 'package:ping_friends/pages/friend/friend_reaction_stats.dart';
+import 'package:ping_friends/pages/friend/radial_menu/mood_radial_menu.dart';
+import 'package:ping_friends/pages/friend/radial_menu/reaction_radial_menu.dart';
 import 'package:ping_friends/util/firestore_util.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
