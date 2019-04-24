@@ -1,11 +1,6 @@
-import 'package:fcm_push/fcm_push.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ping_friends/models/firestore_user.dart';
-import 'package:ping_friends/models/mood.dart';
-import 'package:ping_friends/util/authentication.dart';
-import 'package:ping_friends/util/firestore_util.dart';
 import 'package:vector_math/vector_math.dart' show radians;
 import 'dart:math';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
@@ -17,7 +12,10 @@ final String serverKey =
 // Credit to Jeff Delaney
 class RadialMenu extends StatefulWidget {
   final FirestoreUser friend;
-  RadialMenu({Key key, this.friend}) : super(key: key);
+  final FirestoreUser currentUser;
+  final List<Widget> buttons;
+  RadialMenu({Key key, this.currentUser, this.friend, this.buttons})
+      : super(key: key);
 
   @override
   _RadialMenuState createState() => _RadialMenuState();
@@ -36,7 +34,11 @@ class _RadialMenuState extends State<RadialMenu>
 
   @override
   Widget build(BuildContext context) {
-    return RadialAnimation(controller: controller, friend: widget.friend);
+    return RadialAnimation(
+        controller: controller,
+        currentUser: widget.currentUser,
+        friend: widget.friend,
+        buttons: widget.buttons);
   }
 }
 
@@ -46,7 +48,11 @@ class RadialAnimation extends StatelessWidget {
   Animation<double> scale;
   Animation<double> translation;
   final FirestoreUser friend;
-  RadialAnimation({Key key, this.controller, this.friend}) {
+  final FirestoreUser currentUser;
+  final List<Widget> buttons;
+
+  RadialAnimation(
+      {Key key, this.controller, this.currentUser, this.friend, this.buttons}) {
     scale = Tween<double>(
       begin: 1.5,
       end: 0.0,
@@ -67,79 +73,42 @@ class RadialAnimation extends StatelessWidget {
         builder: (context, builder) {
           return Stack(
             alignment: Alignment.center,
-            children: [
-              _buildButton(0,
-                  color: Colors.red,
-                  icon: FontAwesomeIcons.angry,
-                  mood: Mood.ANGRY),
-              _buildButton(45,
-                  color: Colors.teal,
-                  icon: FontAwesomeIcons.smileBeam,
-                  mood: Mood.HAPPY),
-              _buildButton(90,
-                  color: Colors.pinkAccent,
-                  icon: FontAwesomeIcons.sadTear,
-                  mood: Mood.SAD),
-              _buildButton(135,
-                  color: Colors.blue,
-                  icon: FontAwesomeIcons.pizzaSlice,
-                  mood: Mood.HANGRY),
-              _buildButton(180,
-                  color: Colors.deepOrange,
-                  icon: FontAwesomeIcons.surprise,
-                  mood: Mood.SURPRISED),
-              _buildButton(225,
-                  color: Colors.indigo,
-                  icon: FontAwesomeIcons.tired,
-                  mood: Mood.TIRED),
-              _buildButton(270,
-                  color: Colors.black,
-                  icon: FontAwesomeIcons.userSecret,
-                  mood: Mood.ALONE_TIME),
-              _buildButton(315,
-                  color: Colors.amber,
-                  icon: FontAwesomeIcons.child,
-                  mood: Mood.ATTENTION),
-              Transform.scale(
+            children: _buildButtons()
+              ..add(Transform.scale(
                 // subtract the beginning value to run the opposite animation
                 scale: scale.value - 1.5,
                 child: FloatingActionButton(
-                    heroTag: "close",
+                    heroTag: "close${buttons.length}",
                     child: Icon(FontAwesomeIcons.timesCircle),
                     onPressed: _close),
-              ),
-              Transform.scale(
+              ))
+              ..add(Transform.scale(
                 scale: scale.value,
                 child: FloatingActionButton(
-                    heroTag: "open",
+                    heroTag: "open${buttons.length}",
                     child: Icon(FontAwesomeIcons.solidDotCircle),
                     onPressed: _open),
-              )
-            ],
+              )),
           );
         });
   }
 
-  _buildButton(double angle, {Color color, IconData icon, Mood mood}) {
-    final double rad = radians(angle);
-    return Transform(
-      transform: Matrix4.translation(Vector3(
-          (translation.value) * cos(rad), (translation.value) * sin(rad), 0)),
-      child: Container(
-        // constraints: BoxConstraints.tight(Size.square(500)),
-        alignment: Alignment.center,
-        // decoration:
-        //     BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-        child: Tooltip(
-          message: mood.tooltip,
-          child: FloatingActionButton(
-              heroTag: "icon.${icon.hashCode}",
-              child: Icon(icon),
-              backgroundColor: color,
-              onPressed: () => sendNotification(mood)),
-        ),
-      ),
-    );
+  List<Widget> _buildButtons() {
+    List<Widget> translatedButtons = [];
+    for (var i = 0; i < buttons.length; i++) {
+      Widget button = buttons[i];
+      final double rad = radians(360 / buttons.length * i);
+      translatedButtons.add(Transform(
+          transform: Matrix4.translation(Vector3((translation.value) * cos(rad),
+              (translation.value) * sin(rad), 0)),
+          child: Container(
+              // constraints: BoxConstraints.tight(Size.square(500)),
+              alignment: Alignment.center,
+              // decoration:
+              //     BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+              child: button)));
+    }
+    return translatedButtons;
   }
 
   _open() {
@@ -148,24 +117,5 @@ class RadialAnimation extends StatelessWidget {
 
   _close() {
     controller.reverse();
-  }
-
-  void sendNotification(Mood mood) async {
-    final FCM fcm = FCM(serverKey);
-    FirebaseUser currentUser = await authService.user.first.then((a) => a);
-    final Message fcmMessage = Message()
-      ..to = friend.fcmToken
-      ..title = currentUser.displayName
-      ..body = "${currentUser.displayName} ${mood.message}";
-
-    fcmMessage.data.add(Tuple2("type", 'mood'));
-    fcmMessage.data.add(Tuple2("fromUser", currentUser.uid));
-    fcmMessage.data.add(Tuple2("click_action", "FLUTTER_NOTIFICATION_CLICK"));
-
-    await fcm.send(fcmMessage);
-
-    // tell firebase that we send a notification
-    firestoreUtil.sentNotification(currentUser, friend, mood);
-    //
   }
 }

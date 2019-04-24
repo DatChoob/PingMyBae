@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/models/mood.dart';
+import 'package:ping_friends/models/mood_reaction.dart';
 
 class FirestoreUtil {
   static const String SENT_MOODS = 'sentMoods';
@@ -31,7 +31,8 @@ class FirestoreUtil {
         .getDocuments();
   }
 
-  void sentNotification(FirebaseUser me, FirestoreUser friend, Mood moodSent) {
+  void sentMoodNotification(
+      FirestoreUser me, FirestoreUser friend, Mood moodSent) {
     final DocumentReference postRef = _db
         .collection(USERS)
         .document(me.uid)
@@ -48,6 +49,28 @@ class FirestoreUtil {
       } else {
         await tx.set(
             postRef, <String, dynamic>{moodKey: 1, 'currentMood': moodKey});
+      }
+    });
+  }
+
+  void sentReactionNotification(
+      FirestoreUser me, FirestoreUser friend, MoodReaction moodSent) {
+    final DocumentReference postRef = _db
+        .collection(USERS)
+        .document(me.uid)
+        .collection(SENT_MOODS)
+        .document(friend.uid);
+    Firestore.instance.runTransaction((Transaction tx) async {
+      DocumentSnapshot postSnapshot = await tx.get(postRef);
+      String moodKey = '${moodSent.type}';
+      if (postSnapshot.exists) {
+        await tx.update(postRef, <String, dynamic>{
+          moodKey: (postSnapshot.data[moodKey] ?? 0) + 1,
+          'currentReaction': moodKey
+        });
+      } else {
+        await tx.set(
+            postRef, <String, dynamic>{moodKey: 1, 'currentReaction': moodKey});
       }
     });
   }
