@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
           icon: Icon(Icons.exit_to_app),
           onPressed: _confirmLogoutDialog,
         ),
-        title: Text('Ping My Friends'),
+        title: Text('Ping My Bae'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.person_add),
