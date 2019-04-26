@@ -18,42 +18,51 @@ class ReactionRadialMenu extends StatelessWidget {
         key: Key('reaction'),
         friend: friend,
         currentUser: currentUser,
-        buttons: buildReactionButtons());
+        buttons: buildReactionButtons(context));
   }
 
-  List<Widget> buildReactionButtons() {
+  List<Widget> buildReactionButtons(BuildContext context) {
     return [
       _buildButton(
           color: Colors.green,
           icon: FontAwesomeIcons.handPaper,
-          reaction: MoodReaction.WAVE),
+          reaction: MoodReaction.WAVE,
+          context: context),
+      _buildButton(
+          color: Colors.red,
+          icon: Icons.thumb_down,
+          reaction: MoodReaction.THUMBS_DOWN,
+          context: context),
       _buildButton(
           color: Colors.deepOrange,
-          icon: Icons.thumb_down,
-          reaction: MoodReaction.THUMBS_DOWN),
-      _buildButton(
-          color: Colors.indigo,
           icon: Icons.fastfood,
-          reaction: MoodReaction.LETS_EAT),
+          reaction: MoodReaction.LETS_EAT,
+          context: context),
       _buildButton(
-          color: Colors.blue,
+          color: Colors.purple,
           icon: Icons.thumb_up,
-          reaction: MoodReaction.THUMBS_UP),
+          reaction: MoodReaction.THUMBS_UP,
+          context: context),
     ];
   }
 
-  _buildButton({Color color, IconData icon, MoodReaction reaction}) {
+  _buildButton(
+      {Color color,
+      IconData icon,
+      MoodReaction reaction,
+      BuildContext context}) {
     return Tooltip(
       message: reaction.tooltip,
       child: FloatingActionButton(
           heroTag: "icon.${icon.hashCode}",
           child: Icon(icon),
           backgroundColor: color,
-          onPressed: () => sendReactionNotification(reaction)),
+          onPressed: () => sendReactionNotification(reaction, context)),
     );
   }
 
-  void sendReactionNotification(MoodReaction reaction) async {
+  void sendReactionNotification(
+      MoodReaction reaction, BuildContext context) async {
     final FCM fcm = FCM(serverKey);
     final Message fcmMessage = Message()
       ..to = friend.fcmToken
@@ -68,6 +77,15 @@ class ReactionRadialMenu extends StatelessWidget {
 
     // tell firebase that we send a notification
     firestoreUtil.sentReactionNotification(currentUser, friend, reaction);
-    //
+    openSnackBar(reaction, context);
+  }
+
+  void openSnackBar(MoodReaction reaction, BuildContext context) {
+    print("Das");
+    final snackBar = SnackBar(
+        duration: Duration(milliseconds: 100),
+        content:
+            Text('You pinged ${friend.displayName} with ${reaction.tooltip}'));
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 }

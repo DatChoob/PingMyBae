@@ -18,54 +18,66 @@ class MoodRadialMenu extends StatelessWidget {
         key: Key('mood'),
         friend: friend,
         currentUser: currentUser,
-        buttons: buildMoodButtons());
+        buttons: buildMoodButtons(context));
   }
 
-  List<Widget> buildMoodButtons() {
+  List<Widget> buildMoodButtons(BuildContext context) {
     return [
       _buildButton(
-          color: Colors.red, icon: FontAwesomeIcons.angry, mood: Mood.ANGRY),
+          color: Color(0xFFFF0000),
+          icon: FontAwesomeIcons.angry,
+          mood: Mood.ANGRY,
+          context: context),
       _buildButton(
-          color: Colors.teal,
+          color: Colors.orange,
           icon: FontAwesomeIcons.smileBeam,
-          mood: Mood.HAPPY),
+          mood: Mood.HAPPY,
+          context: context),
       _buildButton(
-          color: Colors.pinkAccent,
+          color: Color(0xFF70FF00),
           icon: FontAwesomeIcons.sadTear,
-          mood: Mood.SAD),
+          mood: Mood.SAD,
+          context: context),
       _buildButton(
-          color: Colors.blue,
+          color: Color(0xFF00FF00),
           icon: FontAwesomeIcons.pizzaSlice,
-          mood: Mood.HANGRY),
+          mood: Mood.HANGRY,
+          context: context),
       _buildButton(
-          color: Colors.deepOrange,
+          color: Color(0xFF00FFFF),
           icon: FontAwesomeIcons.surprise,
-          mood: Mood.SURPRISED),
+          mood: Mood.SURPRISED,
+          context: context),
       _buildButton(
-          color: Colors.indigo, icon: FontAwesomeIcons.tired, mood: Mood.TIRED),
+          color: Color(0xFF0000FF),
+          icon: FontAwesomeIcons.tired,
+          mood: Mood.TIRED,
+          context: context),
       _buildButton(
-          color: Colors.black,
+          color: Color(0xFF7F00FF),
           icon: FontAwesomeIcons.userSecret,
-          mood: Mood.ALONE_TIME),
+          mood: Mood.ALONE_TIME,
+          context: context),
       _buildButton(
-          color: Colors.amber,
+          color: Color(0xFFFF00FF),
           icon: FontAwesomeIcons.child,
-          mood: Mood.ATTENTION)
+          mood: Mood.ATTENTION,
+          context: context)
     ];
   }
 
-  _buildButton({Color color, IconData icon, Mood mood}) {
+  _buildButton({Color color, IconData icon, Mood mood, BuildContext context}) {
     return Tooltip(
       message: mood.tooltip,
       child: FloatingActionButton(
           heroTag: "icon.${icon.hashCode}",
           child: Icon(icon),
           backgroundColor: color,
-          onPressed: () => sendMoodNotification(mood)),
+          onPressed: () => sendMoodNotification(mood, context)),
     );
   }
 
-  void sendMoodNotification(Mood mood) async {
+  void sendMoodNotification(Mood mood, BuildContext context) async {
     final FCM fcm = FCM(serverKey);
     final Message fcmMessage = Message()
       ..to = friend.fcmToken
@@ -80,6 +92,13 @@ class MoodRadialMenu extends StatelessWidget {
 
     // tell firebase that we send a notification
     firestoreUtil.sentMoodNotification(currentUser, friend, mood);
-    //
+    openSnackBar(mood, context);
+  }
+
+  void openSnackBar(Mood mood, BuildContext context) {
+    final snackBar = SnackBar(
+        duration: Duration(milliseconds: 100),
+        content: Text('You pinged ${friend.displayName} with ${mood.tooltip}'));
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 }

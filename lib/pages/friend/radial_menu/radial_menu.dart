@@ -79,14 +79,21 @@ class RadialAnimation extends StatelessWidget {
           return Stack(
             alignment: Alignment.center,
             children: _buildButtons()
-              ..add(Transform.scale(
-                // subtract the beginning value to run the opposite animation
-                scale: scale.value - 1.5,
-                child: FloatingActionButton(
-                    heroTag: "close$key",
-                    child: Icon(FontAwesomeIcons.timesCircle),
-                    onPressed: _close),
-              ))
+              ..add(
+                Transform.scale(
+                  // subtract the beginning value to run the opposite animation
+                  scale: scale.value - 1.5,
+                  child: GestureDetector(
+                    child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(),
+                        child:
+                            Center(child: CustomPaint(painter: ColorWheel()))),
+                    onTap: _close,
+                  ),
+                ),
+              )
               ..add(Transform.scale(
                 scale: scale.value,
                 child: FloatingActionButton(
@@ -117,5 +124,50 @@ class RadialAnimation extends StatelessWidget {
 
   _close() {
     controller.reverse();
+  }
+}
+
+class ColorWheel extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Rect rect = Rect.fromCircle(
+      center: Offset.zero,
+      radius: 30.0,
+    );
+    canvas.rotate(radians(180.0));
+
+    // a fancy rainbow gradient
+    final Gradient gradient = SweepGradient(
+      colors: <Color>[
+        Color(0xFFFF0000),
+        Colors.orange,
+        Color(0xFF70FF00),
+        Color(0xFF00FF00),
+        Color(0xFF00FFFF),
+        Color(0xFF0000FF),
+        Color(0xFF7F00FF),
+        Color(0xFFFF00FF),
+      ],
+      // stops: [
+      //   0.0,
+      //   0.13,
+      //   0.25,
+      //   0.35,
+      //   0.5,
+      //   0.63,
+      //   0.75,
+      //   0.88,
+      //   // 1.0,
+      // ],
+    );
+
+    // create the Shader from the gradient and the bounding square
+    final Paint paint = Paint()..shader = gradient.createShader(rect);
+    canvas.drawArc(rect, 0, 2 * pi, true, paint);
+  }
+
+  @override
+  bool shouldRepaint(ColorWheel oldDelegate) {
+    return true;
   }
 }
