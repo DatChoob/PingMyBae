@@ -5,9 +5,6 @@ import 'package:vector_math/vector_math.dart' show radians;
 import 'dart:math';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
-final String serverKey =
-    "AAAAuZeUo-s:APA91bHtlAXklqXnuCnPlcu_F01KJa38jtytOHODZuBlf56Z7B6upzbrYZaGx_hBJeKxMgsNuWfa3-X7GGyeUkMpLn6Yyy-729Y43R_hTI0FCjI5ahhenOn9vCbadUSQOdIMl0ek17my";
-
 // Got this code from https://fireship.io/lessons/flutter-radial-menu-staggered-animations/
 // Credit to Jeff Delaney
 class RadialMenu extends StatefulWidget {

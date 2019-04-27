@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcm_push/fcm_push.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/util/firestore_util.dart';
@@ -154,12 +155,9 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
         });
   }
 
-  final String serverKey =
-      "AAAAuZeUo-s:APA91bHtlAXklqXnuCnPlcu_F01KJa38jtytOHODZuBlf56Z7B6upzbrYZaGx_hBJeKxMgsNuWfa3-X7GGyeUkMpLn6Yyy-729Y43R_hTI0FCjI5ahhenOn9vCbadUSQOdIMl0ek17my";
-
   void sendFCMNotificationOfRequestSend(
       FirestoreUser currentUser, FirestoreUser friend) async {
-    final FCM fcm = FCM(serverKey);
+    final FCM fcm = FCM(DotEnv().env['FIREBASE_FCM_SERVER_KEY']);
     final Message fcmMessage = Message()
       ..to = friend.fcmToken
       ..title = currentUser.displayName

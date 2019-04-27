@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ping_friends/login_page.dart';
 import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/pages/home_page.dart';
 import 'package:ping_friends/util/authentication.dart';
 import 'package:ping_friends/util/firestore_util.dart';
 
-void main() => runApp(MyApp());
+Future main() async {
+  await DotEnv().load('.env');
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override

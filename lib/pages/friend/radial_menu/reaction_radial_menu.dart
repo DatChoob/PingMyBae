@@ -1,5 +1,6 @@
 import 'package:fcm_push/fcm_push.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ping_friends/models/firestore_user.dart';
 import 'package:ping_friends/models/mood_reaction.dart';
@@ -63,7 +64,7 @@ class ReactionRadialMenu extends StatelessWidget {
 
   void sendReactionNotification(
       MoodReaction reaction, BuildContext context) async {
-    final FCM fcm = FCM(serverKey);
+    final FCM fcm = FCM(DotEnv().env['FIREBASE_FCM_SERVER_KEY']);
     final Message fcmMessage = Message()
       ..to = friend.fcmToken
       ..title = currentUser.displayName

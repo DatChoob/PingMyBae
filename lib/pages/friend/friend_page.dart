@@ -126,7 +126,4 @@ class _SwipableResponsesState extends State<SwipableResponses> {
       control: SwiperControl(),
     );
   }
-
-  final String serverKey =
-      "AAAAuZeUo-s:APA91bHtlAXklqXnuCnPlcu_F01KJa38jtytOHODZuBlf56Z7B6upzbrYZaGx_hBJeKxMgsNuWfa3-X7GGyeUkMpLn6Yyy-729Y43R_hTI0FCjI5ahhenOn9vCbadUSQOdIMl0ek17my";
 }
