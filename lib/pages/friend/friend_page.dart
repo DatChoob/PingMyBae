@@ -7,6 +7,7 @@ import 'package:ping_friends/pages/friend/friend_mood_stats.dart';
 import 'package:ping_friends/pages/friend/friend_reaction_stats.dart';
 import 'package:ping_friends/pages/friend/radial_menu/mood_radial_menu.dart';
 import 'package:ping_friends/pages/friend/radial_menu/reaction_radial_menu.dart';
+import 'package:ping_friends/pages/friend/relationship_stats_page.dart';
 import 'package:ping_friends/util/firestore_util.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
@@ -48,22 +49,19 @@ class _FriendPageState extends State<FriendPage> {
         elevation: 0,
         title: Center(
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Hero(
-            tag: "hero.${widget.friend.uid}",
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(40.0),
-              child: Image.network(widget.friend.photoURL),
+          GestureDetector(
+            onTap: _openRelationshipStats,
+            child: Hero(
+              tag: "hero.${widget.friend.uid}",
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(40.0),
+                child: Image.network(widget.friend.photoURL),
+              ),
             ),
           ),
           SizedBox(width: 10),
           Text("${widget.friend.displayName}")
         ])),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.delete_forever),
-            onPressed: _showDialogStopBeingFriends,
-          )
-        ],
       ),
       body: SafeArea(
           child: Container(
@@ -74,28 +72,14 @@ class _FriendPageState extends State<FriendPage> {
     );
   }
 
-  void _showDialogStopBeingFriends() async {
-    bool removeFriend = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Removing friend"),
-          content:
-              Text("Stop being friends with ${widget.friend.displayName}?"),
-          actions: <Widget>[
-            FlatButton(
-                child: Text("Yes"),
-                onPressed: () => Navigator.of(context).pop(true)),
-            FlatButton(
-              child: Text("No"),
-              onPressed: () => Navigator.of(context).pop(false),
-            )
-          ],
-        );
-      },
-    );
-    if (removeFriend == true) {
-      firestoreUtil.stopBeingFriends(widget.currentUser.uid, widget.friend.uid);
+  _openRelationshipStats() async {
+    String result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => RelationshipStatsPage(
+                currentUser: widget.currentUser, friend: widget.friend)));
+
+    if (result == 'removeFriend') {
       Navigator.of(context).pop();
     }
   }
@@ -119,6 +103,7 @@ class _SwipableResponsesState extends State<SwipableResponses> {
       itemBuilder: (BuildContext context, int index) {
         return index == 0
             ? Column(children: [
+                Text('Moods', style: TextStyle(fontSize: 30)),
                 FriendMoodStats(stats: widget.stats),
                 Expanded(
                     child: Center(
@@ -127,6 +112,7 @@ class _SwipableResponsesState extends State<SwipableResponses> {
                             currentUser: widget.currentUser)))
               ])
             : Column(children: [
+                Text('Reactions', style: TextStyle(fontSize: 30)),
                 FriendReactionStats(stats: widget.stats),
                 Expanded(
                     child: Center(
