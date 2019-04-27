@@ -64,11 +64,20 @@ class AuthService {
     String fcmToken = await FirebaseMessaging().getToken();
     DocumentReference ref = _db.collection('users').document(user.uid);
 
+    List<String> nameSplit = user.displayName.toLowerCase().split(' ');
+    String firstName = nameSplit[0];
+    String lastName;
+    if (nameSplit.length > 1) {
+      lastName = nameSplit[1];
+    }
+
     return await ref.setData({
       'uid': user.uid,
-      'email': user.email,
+      'email': user.email.toLowerCase(),
       'photoURL': user.photoUrl,
       'displayName': user.displayName,
+      'firstName': firstName,
+      'lastName': lastName,
       'fcmToken': fcmToken,
       'lastSeen': DateTime.now()
     }, merge: true);

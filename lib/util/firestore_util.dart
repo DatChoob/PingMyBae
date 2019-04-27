@@ -24,11 +24,24 @@ class FirestoreUtil {
         .snapshots();
   }
 
-  Future<QuerySnapshot> searchFriendByEmail(String email) {
-    return _db
+//Future Enahncement: Search via elasticsearch
+  Future<List<QuerySnapshot>> searchFriend(String keyword) {
+    keyword = keyword.toLowerCase();
+    Future<QuerySnapshot> searchEmailFuture =
+        _db.collection(USERS).where('email', isEqualTo: keyword).getDocuments();
+
+    Future<QuerySnapshot> searchFirstNameFuture = _db
         .collection(USERS)
-        .where('email', isEqualTo: email)
+        .where('firstName', isEqualTo: keyword)
         .getDocuments();
+
+    Future<QuerySnapshot> searchLastFuture = _db
+        .collection(USERS)
+        .where('lastName', isEqualTo: keyword)
+        .getDocuments();
+
+    return Future.wait(
+        [searchEmailFuture, searchFirstNameFuture, searchLastFuture]);
   }
 
   void sentMoodNotification(

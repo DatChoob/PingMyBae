@@ -35,17 +35,20 @@ class _AddFriendsRouteState extends State<AddFriendsRoute> {
           ]),
           Flexible(
               child: FutureBuilder(
-                  future: firestoreUtil.searchFriendByEmail(_searchKeywords),
+                  future: firestoreUtil.searchFriend(_searchKeywords),
                   builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      return snapshot.data.documents.length > 0 &&
+                      AsyncSnapshot<List<QuerySnapshot>> snapshots) {
+                    if (snapshots.hasData) {
+                      List<ListTile> friendData = [];
+                      snapshots.data.forEach((QuerySnapshot snapshot) =>
+                          friendData.addAll(snapshot.documents
+                              .map((documentSnapshot) => _friendRowCard(
+                                  documentSnapshot.data, context))
+                              .toList()));
+
+                      return friendData.length > 0 &&
                               _searchKeywords.length != 0
-                          ? ListView(
-                              children: snapshot.data.documents
-                                  .map((documentSnapshot) => _friendRowCard(
-                                      documentSnapshot.data, context))
-                                  .toList())
+                          ? ListView(children: friendData)
                           : Padding(
                               padding: EdgeInsets.symmetric(vertical: 24),
                               child: Text("No Results Found"),
