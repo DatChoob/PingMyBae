@@ -1,16 +1,13 @@
-# ping_friends
+# PingMyBae
 
-A new Flutter project.
+Allows Users to send each other notifications about their mood
 
-## Getting Started
+## To Run
 
-This project is a starting point for a Flutter application.
+Provide your own firebase configuration:
 
-A few resources to get you started if this is your first Flutter project:
+- /android/app/google-services.json
+- /ios/Runner/GoogleService-Info.plist
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+open a simulator or attach a device to your computer
+execute 'flutter run'
