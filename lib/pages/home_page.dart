@@ -83,19 +83,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   _openAddFriendsPage() {
+    _navigateToPage(context, AddFriendsRoute(currentUser: widget.currentUser));
+  }
+
+  _navigateToPage(BuildContext context, Widget page) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                AddFriendsRoute(currentUser: widget.currentUser)));
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
   }
 
   _openPendingFriendRequestsPage() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                FriendRequestRoute(currentUser: widget.currentUser)));
+    _navigateToPage(
+        context, FriendRequestRoute(currentUser: widget.currentUser));
   }
 
   void _navigateToItemDetail(Map<String, dynamic> message) async {
@@ -104,19 +104,15 @@ class _HomePageState extends State<HomePage> {
 
     if (item.isMoodType) {
       FirestoreUser friend = await firestoreUtil.getUser(item.fromUserID);
-      Navigator.push(
+      _navigateToPage(
           context,
-          MaterialPageRoute(
-              builder: (_) => FriendPage(
-                    friend: friend,
-                    currentUser: widget.currentUser,
-                  )));
+          FriendPage(
+            friend: friend,
+            currentUser: widget.currentUser,
+          ));
     } else if (item.isFriendRequestType) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (_) =>
-                  FriendRequestRoute(currentUser: widget.currentUser)));
+      _navigateToPage(
+          context, FriendRequestRoute(currentUser: widget.currentUser));
     }
   }
 
@@ -127,36 +123,43 @@ class _HomePageState extends State<HomePage> {
       return Center(
           child: Text("You have no friends. Go and add your friends"));
     } else {
-      return ListView(
-          children: futureFriendList.map((Future<FirestoreUser> userFuture) {
-        return FutureBuilder(
-            future: userFuture,
-            builder: (BuildContext context,
-                AsyncSnapshot<FirestoreUser> userSnapshot) {
-              if (userSnapshot.hasData) {
-                FirestoreUser user = userSnapshot.data;
-                return ListTile(
-                    title: Text(user.displayName),
-                    leading: Hero(
-                        tag: "hero.${user.uid}",
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Image.network(user.photoURL, width: 55))),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => FriendPage(
-                                    friend: user,
-                                    currentUser: widget.currentUser,
-                                  )));
-                    });
-              } else
-                return Center(child: CircularProgressIndicator());
-            });
-      }).toList());
+      return FutureBuilder(
+          future: Future.wait(futureFriendList),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<FirestoreUser>> allUsersSnapshot) {
+            if (allUsersSnapshot.hasData) {
+              List<FirestoreUser> users = allUsersSnapshot.data;
+              return ListView(
+                  children: users
+                      .map((user) =>
+                          firestoreUserToFriendListTile(user, context))
+                      .toList());
+            } else
+              return Center(child: CircularProgressIndicator());
+          });
     }
+  }
+
+  ListTile firestoreUserToFriendListTile(
+      FirestoreUser user, BuildContext context) {
+    return ListTile(
+        title: Text(user.displayName),
+        leading: Hero(
+          tag: "hero.${user.uid}",
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: Image.network(user.photoURL, width: 55),
+          ),
+        ),
+        trailing: Icon(Icons.keyboard_arrow_right),
+        onTap: () => navigateToFirstPage(context, user));
+  }
+
+  void navigateToFirstPage(BuildContext context, FirestoreUser user) {
+    _navigateToPage(
+      context,
+      FriendPage(friend: user, currentUser: widget.currentUser),
+    );
   }
 
   void _confirmLogoutDialog() async {
