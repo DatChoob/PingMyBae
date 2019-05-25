@@ -1,5 +1,5 @@
-import 'package:ping_friends/models/mood.dart';
-import 'package:ping_friends/models/mood_reaction.dart';
+import 'package:pingmybae/models/mood.dart';
+import 'package:pingmybae/models/mood_reaction.dart';
 
 class NotificationStats {
   int moodAlone;

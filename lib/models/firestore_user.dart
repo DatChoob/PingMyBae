@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ping_friends/util/firestore_util.dart';
+import 'package:pingmybae/util/firestore_util.dart';
 
 class FirestoreUser {
   String uid;

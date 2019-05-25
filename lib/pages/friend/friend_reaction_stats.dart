@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ping_friends/models/mood_reaction.dart';
-import 'package:ping_friends/models/notification_stats.dart';
+import 'package:pingmybae/models/mood_reaction.dart';
+import 'package:pingmybae/models/notification_stats.dart';
 
 class FriendReactionStats extends StatelessWidget {
   final NotificationStats stats;

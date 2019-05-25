@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ping_friends/models/firestore_user.dart';
-import 'package:ping_friends/util/firestore_util.dart';
+import 'package:pingmybae/models/firestore_user.dart';
+import 'package:pingmybae/util/firestore_util.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class FriendRequestRoute extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ping_friends/models/firestore_user.dart';
-import 'package:ping_friends/models/mood.dart';
-import 'package:ping_friends/models/mood_reaction.dart';
+import 'package:pingmybae/models/firestore_user.dart';
+import 'package:pingmybae/models/mood.dart';
+import 'package:pingmybae/models/mood_reaction.dart';
 
 class FirestoreUtil {
   static const String SENT_MOODS = 'sentMoods';

@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:ping_friends/models/firestore_user.dart';
-import 'package:ping_friends/models/notification_from_message.dart';
-import 'package:ping_friends/pages/add_friends_route.dart';
-import 'package:ping_friends/pages/friend/friend_page.dart';
-import 'package:ping_friends/pages/friend_request_route.dart';
+import 'package:pingmybae/models/firestore_user.dart';
+import 'package:pingmybae/models/notification_from_message.dart';
+import 'package:pingmybae/pages/add_friends_route.dart';
+import 'package:pingmybae/pages/friend/friend_page.dart';
+import 'package:pingmybae/pages/friend_request_route.dart';
 
-import 'package:ping_friends/util/authentication.dart';
-import 'package:ping_friends/util/firestore_util.dart';
+import 'package:pingmybae/util/authentication.dart';
+import 'package:pingmybae/util/firestore_util.dart';
 
 class HomePage extends StatefulWidget {
   final FirestoreUser currentUser;

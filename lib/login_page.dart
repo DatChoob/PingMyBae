@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ping_friends/google_signin_button.dart';
-import 'package:ping_friends/util/authentication.dart';
+import 'package:pingmybae/google_signin_button.dart';
+import 'package:pingmybae/util/authentication.dart';
 
 class LoginPage extends StatelessWidget {
   @override

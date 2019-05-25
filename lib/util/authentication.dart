@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ping_friends/models/firestore_user.dart';
+import 'package:pingmybae/models/firestore_user.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthService {

@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:ping_friends/login_page.dart';
-import 'package:ping_friends/models/firestore_user.dart';
-import 'package:ping_friends/pages/home_page.dart';
-import 'package:ping_friends/util/authentication.dart';
-import 'package:ping_friends/util/firestore_util.dart';
+import 'package:pingmybae/login_page.dart';
+import 'package:pingmybae/models/firestore_user.dart';
+import 'package:pingmybae/pages/home_page.dart';
+import 'package:pingmybae/util/authentication.dart';
+import 'package:pingmybae/util/firestore_util.dart';
 
 Future main() async {
   await DotEnv().load('.env');

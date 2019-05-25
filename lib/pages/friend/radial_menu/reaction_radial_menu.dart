@@ -4,10 +4,10 @@ import 'package:fcm_push/fcm_push.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ping_friends/models/firestore_user.dart';
-import 'package:ping_friends/models/mood_reaction.dart';
-import 'package:ping_friends/pages/friend/radial_menu/radial_menu.dart';
-import 'package:ping_friends/util/firestore_util.dart';
+import 'package:pingmybae/models/firestore_user.dart';
+import 'package:pingmybae/models/mood_reaction.dart';
+import 'package:pingmybae/pages/friend/radial_menu/radial_menu.dart';
+import 'package:pingmybae/util/firestore_util.dart';
 
 class ReactionRadialMenu extends StatefulWidget {
   final FirestoreUser friend;

@@ -1,4 +1,4 @@
-package com.example.ping_friends;
+package com.example.pingmybae;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
